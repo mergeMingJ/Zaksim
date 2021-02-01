@@ -40,7 +40,13 @@ export default function DoneList() {
       <CssBaseline />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Typography variant="h5" align="left" color="textPrimary" gutterBottom>
+          <Typography
+            variant="h5"
+            align="left"
+            color="textPrimary"
+            style={{ fontWeight: 'bold' }}
+            gutterBottom
+          >
             Merge 님의 완심
           </Typography>
           <Grid container spacing={4}>
