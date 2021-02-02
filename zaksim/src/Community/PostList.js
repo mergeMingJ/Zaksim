@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import PostTable from './PostTable';
 import PostDetail from './PostDetail';
+import Posting from './Posting';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,6 +78,7 @@ export default function PostList() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         공부 리스트
+        <Posting></Posting>
       </TabPanel>
       <TabPanel value={value} index={3}>
         취미 리스트
