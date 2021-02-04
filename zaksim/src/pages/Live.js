@@ -1,14 +1,8 @@
-import React from 'react';
-import LiveVideo from '../Live/LiveVideo';
-import NewWindow from 'react-new-window';
+import React from "react";
+import LiveVideo from "../Live/LiveVideo";
 
 const Live = () => {
-  return (
-    <NewWindow>
-      <h1> New window?</h1>
-      <LiveVideo></LiveVideo>
-    </NewWindow>
-  );
+  return <LiveVideo></LiveVideo>;
 };
 
 export default Live;
