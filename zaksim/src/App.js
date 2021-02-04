@@ -6,6 +6,7 @@ import { Mypage } from './pages';
 import { MyZaksim } from './pages';
 import { Login } from './pages';
 import { SignUp } from './pages';
+import { Community } from './pages';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/MyZaksim" component={MyZaksim} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
+          <Route path="/community" component={Community} />
         </Switch>
       </Router>
     </div>
