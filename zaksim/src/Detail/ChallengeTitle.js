@@ -6,29 +6,35 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import water from '../Image/water.jpg';
+import StarOutlineIcon from '@material-ui/icons/StarOutline';
+import { IconButton } from 'material-ui';
 
 const useStyles = makeStyles((theme) => ({
-  bg: {
+  darken: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: '54px 0px 80px',
+    position: 'absolute',
     width: '100%',
     height: '100%',
-    position: 'absolute', // 다른 요소들 위로 겹쳐질 수 있게 함
+    top: '0',
+    right: '0',
+    bottom: '0',
+    left: '0',
   },
   titleContent: {
-    padding: theme.spacing(8, 0, 6),
-    position: 'relative',
+    padding: theme.spacing(8, 0, 5),
     backgroundImage: `url(${water})`,
-    '&::after': {
-      position: 'absolute',
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      width: '100%',
-      height: '100%',
-    },
+    position: 'relative',
   },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  buttonSize: {
-    width: '130px',
+  statusBox: {
+    padding: '7px 30px 7px 30px',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    marginTop: theme.spacing(7),
+    borderRadius: '2em',
+    backgroundColor: 'black',
+    opacity: '0.7',
   },
 }));
 
@@ -42,28 +48,18 @@ export default function ChallengeTitle() {
         <div className={classes.titleContent}>
           <Container maxWidth="md">
             <Typography
+              className={classes.darken}
               variant="h4"
               align="center"
-              color="textPrimary"
-              style={{ fontWeight: 'bold' }}
-              gutterBottom
+              style={{ fontWeight: 'bold', color: 'white' }}
             >
               물 마시는 습관 기르기. 매일 500mL 인증!
             </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    참여 32명
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    인증률 61%
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
+            <Grid container spacing={0} justify="center">
+              <Typography className={classes.statusBox}>
+                참여 32명&nbsp;&nbsp;|&nbsp;&nbsp;인증률 61%
+              </Typography>
+            </Grid>
           </Container>
         </div>
       </main>

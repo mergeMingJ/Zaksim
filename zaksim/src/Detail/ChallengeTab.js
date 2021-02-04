@@ -31,11 +31,10 @@ export default function ChallengeTab() {
     <div className={classes.root}>
       <Container maxWidth="md">
         <TabContext value={value}>
-          <AppBar position="static">
+          <AppBar elevation={0} position="static">
             <TabList
               onChange={handleChange}
               aria-label="simple tabs example"
-              //TODO 탭바 그림자 지우기
               style={{ backgroundColor: 'white', color: 'black' }}
               centered
             >
