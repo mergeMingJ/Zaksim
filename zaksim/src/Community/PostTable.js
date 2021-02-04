@@ -9,8 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Pagination from '@material-ui/lab/Pagination';
 import { Container } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { Translate } from '@material-ui/icons';
 import CreateIcon from '@material-ui/icons/Create';
+import axios from 'axios'
 
 const useStyles = makeStyles({
   table: {
@@ -38,8 +38,19 @@ const rows = [
   createData(5, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
 ];
 
+
 export default function PostTable() {
   const classes = useStyles();
+  var boards = Object()
+  axios.get('https://i4b108.p.ssafy.io/community')
+    .then(function(res) {
+      // console.log(res.data.object[0])
+      boards = res.data.object[0]
+      console.log(boards.title)
+    })
+    .catch(function(error) {
+      console.log(error)
+    })
 
   return (
     <div>
@@ -71,7 +82,7 @@ export default function PostTable() {
       </TableContainer>
       <Container className={classes.page}>
         <Pagination className={classes.write} count={5}></Pagination>
-        <Link className={classes.write}><CreateIcon></CreateIcon>글쓰기</Link>
+        <Link className={classes.write} to={`/write`}><CreateIcon></CreateIcon>글쓰기</Link>
       </Container>
       
     </div>

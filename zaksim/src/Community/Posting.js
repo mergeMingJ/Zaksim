@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Container, Grid, Typography, makeStyles, Box, TextField } from '@material-ui/core';
+import { Button, Container, Grid, Typography, makeStyles, Link, Box, TextField } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import FixedItem from '../TotalPage/FixedItem';
 
 const useStyles = makeStyles({
   titleArea: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
     borderRadius: '5px',
   },
   title: {
-    width: '100%',
+    width: '680px',
     fontSize: '18px',
     padding: '12px 0',
     border: '1px solid grey',
@@ -31,10 +32,9 @@ const useStyles = makeStyles({
     fontSize: '14px',
     margin: 0,
     padding: '5px',
-    height: '100px',
-    width: '100%',
+    height: '600px',
+    width: '800px',
     border: '1px solid grey',
-    verticalAlign: 'text-top'
   },
   submit: {
     color: 'white',
@@ -54,7 +54,8 @@ function Posting() {
   };
   return (
     <div>
-      <div className={classes.titleArea}>
+      <FixedItem></FixedItem>
+      <Container>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel>카테고리</InputLabel>
           <Select
@@ -70,13 +71,9 @@ function Posting() {
           </Select>
         </FormControl>
         <input className={classes.title} type="text" placeholder="제목을 입력하세요."></input>
-      </div>
-      <TextField
-        multiline
-        defaultValue="내용을 입력하세요."
-        variant="outlined"
-      />
-      <Button className={classes.submit}>글 작성</Button>
+        <p><textarea className={classes.content} type="text" placeholder="내용을 입력하세요."></textarea></p>
+        <Button className={classes.submit}>글쓰기</Button>
+      </Container>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { MyZaksim } from './pages';
 import { Login } from './pages';
 import { SignUp } from './pages';
 import { Community } from './pages';
+import Posting from './Community/Posting';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
           <Route path="/community" component={Community} />
+          <Route path="/write" component={Posting} />
+
         </Switch>
       </Router>
     </div>
