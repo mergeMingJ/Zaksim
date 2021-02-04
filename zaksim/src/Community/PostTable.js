@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,8 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Pagination from '@material-ui/lab/Pagination';
 import { Container } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { Translate } from '@material-ui/icons';
 import CreateIcon from '@material-ui/icons/Create';
+import axios from 'axios'
 
 const useStyles = makeStyles({
   table: {
@@ -25,22 +25,35 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(num, title, writer, date, count) {
-  return { num, title, writer, date, count };
-}
-
-const rows = [
-  createData(10, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-  createData(9, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-  createData(8, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-  createData(7, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-  createData(6, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-  createData(5, '운동|운동방법 공유합니다.', '도니보리', '2021-01-31', 21),
-];
-
 export default function PostTable() {
   const classes = useStyles();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(10);
 
+  useEffect( async() => {
+    setLoading(true);
+    // const response = await axios.get('https://jsonplaceholder.typicode.com/posts'); // pagination 테스트 用
+    const response = await axios.get('https://i4b108.p.ssafy.io/community');
+    setPosts(response.data.object);
+    setLoading(false);
+  }, []);
+  
+  console.log(posts);
+
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = (tmp) => {
+    let currentPosts = 0;
+    currentPosts = tmp.slice(indexOfFirst, indexOfLast);
+    return currentPosts;
+  };
+  
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
+  
   return (
     <div>
       <TableContainer>
@@ -55,23 +68,34 @@ export default function PostTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.num}>
-                <TableCell component="th" scope="row">
-                  {row.num}
+            {
+              loading &&
+              <div> loading... </div>
+            }
+            { currentPosts(posts).map(post => (
+              <TableRow key={post.postId}>               
+                <TableCell component="th" scope="post">
+                  {post.postId}
                 </TableCell>
-                <TableCell align="right">{row.title}</TableCell>
-                <TableCell align="right">{row.writer}</TableCell>
-                <TableCell align="right">{row.date}</TableCell>
-                <TableCell align="right">{row.count}</TableCell>
+                <TableCell align="right"><Link to={`/read/${post.postId}`}>{post.title}</Link></TableCell>
+                <TableCell align="right">{post.userId}</TableCell>
+                <TableCell align="right">{post.regtime}</TableCell>
+                <TableCell align="right">{post.postId}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+  
+      
       <Container className={classes.page}>
-        <Pagination className={classes.write} count={5}></Pagination>
-        <Link className={classes.write}><CreateIcon></CreateIcon>글쓰기</Link>
+        <Pagination 
+          className={classes.write}
+          page={currentPage}
+          count={parseInt(posts.length/postsPerPage)+1}
+          onChange={handleChange}
+        ></Pagination>
+        <Link className={classes.write} to={`/write`}><CreateIcon></CreateIcon>글쓰기</Link>
       </Container>
       
     </div>
