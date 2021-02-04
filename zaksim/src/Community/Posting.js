@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Button, Container, Grid, Typography, makeStyles, Link, Box, TextField } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,6 +6,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import FixedItem from '../TotalPage/FixedItem';
+import axios from 'axios'
 
 const useStyles = makeStyles({
   titleArea: {
@@ -47,11 +48,34 @@ const useStyles = makeStyles({
 
 function Posting() {
   const classes = useStyles();
-  const [category, setCategory] = React.useState('');
+  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
-  const handleChange = (event) => {
-    setCategory(event.target.value);
+  const postSave = async () => {
+    const post = await axios.post('https://i4b108.p.ssafy.io/community', {
+      "categoryId": category,
+      "content": content,
+      "filePath": "string",
+      "postId": 0,
+      "regtime": "2021-02-04T19:27:31.681Z",
+      "title": title,
+      "userId": 0
+    });
+    console.log(post);
+    return window.location.href = '/community'
+  }
+
+  const onCategoryHandler = (e) => {
+    setCategory(e.target.value);
   };
+  const onTitleHandler = (e) => {
+    setTitle(e.target.value);
+  };
+  const onContentHandler = (e) => {
+    setContent(e.target.value);
+  };
+
   return (
     <div>
       <FixedItem></FixedItem>
@@ -61,18 +85,18 @@ function Posting() {
           <Select
             className={classes.select}
             value={category}
-            onChange={handleChange}
+            onChange={onCategoryHandler}
             label="카테고리"
           >
-            <MenuItem value={10}>운동</MenuItem>
-            <MenuItem value={20}>공부</MenuItem>
-            <MenuItem value={30}>취미</MenuItem>
-            <MenuItem value={30}>기타</MenuItem>
+            <MenuItem value={0}>운동</MenuItem>
+            <MenuItem value={1}>공부</MenuItem>
+            <MenuItem value={2}>취미</MenuItem>
+            <MenuItem value={3}>기타</MenuItem>
           </Select>
         </FormControl>
-        <input className={classes.title} type="text" placeholder="제목을 입력하세요."></input>
-        <p><textarea className={classes.content} type="text" placeholder="내용을 입력하세요."></textarea></p>
-        <Button className={classes.submit}>글쓰기</Button>
+        <input className={classes.title} type="text" placeholder="제목을 입력하세요." onChange={onTitleHandler}></input>
+        <p><textarea className={classes.content} type="text" placeholder="내용을 입력하세요." onChange={onContentHandler}></textarea></p>
+        <Button className={classes.submit} onClick={postSave}>글쓰기</Button>
       </Container>
     </div>
   );

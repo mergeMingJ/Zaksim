@@ -74,11 +74,9 @@ export default function PostList() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         운동 리스트
-        <PostDetail></PostDetail>
       </TabPanel>
       <TabPanel value={value} index={2}>
         공부 리스트
-        <Posting></Posting>
       </TabPanel>
       <TabPanel value={value} index={3}>
         취미 리스트
