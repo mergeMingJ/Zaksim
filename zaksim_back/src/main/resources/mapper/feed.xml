@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zaksim.model.mapper.FeedMapper">
+
+	<select id="feedlist" parameterType="int" resultType="Checkfeed">
+		select c.feed_id feedId,c.challenge_id challengeId,c.user_id userId,
+				c.title,c.content,c.img_path imgPath,c.regtime
+		from checkfeed c
+		where c.challenge_id=#{challengeId}
+	</select>
+	
+	<select id="feedinfo" parameterType="int" resultType="Checkfeed">
+		select c.feed_id feedId,c.challenge_id challengeId,c.user_id userId,
+				c.title,c.content,c.img_path imgPath,c.regtime
+		from checkfeed c
+		where c.feed_id=#{feedId}
+	</select>
+	
+	<insert id="feedinsert" parameterType="Checkfeed">
+		insert into checkfeed(challenge_id,user_id,title,content,img_path)
+		values(#{challengeId},#{userId},#{title},#{content},#{imgPath})
+	</insert>
+	
+	<update id="feedupdate" parameterType="Checkfeed">
+		update checkfeed c set
+		c.title=#{title},c.content=#{content},c.img_path=#{imgPath}
+		where c.feed_id=#{feedId}
+	</update>
+	
+	<delete id="feeddelete" parameterType="int">
+		delete from checkfeed c
+		where c.feed_id=#{feedId}
+	</delete>
+	
+	<delete id="feeddeleteall" parameterType="int">
+		delete from checkfeed c
+		where c.challenge_id=#{challengeId}
+	</delete>
+	
+	
+	<select id="fcommentlist" parameterType="int" resultType="Fcomment">
+		select f.fcomment_id fcommentId,f.feed_id feedId,f.user_id userId,
+				f.content,f.regtime
+		from fcomment f
+		where f.feed_id=#{feedId}
+	</select>
+	
+	<insert id="fcommentinsert" parameterType="Fcomment">
+		insert into fcomment(feed_id,user_id,content)
+		values(#{feedId},#{userId},#{content})
+	</insert>
+	
+	<update id="fcommentupdate" parameterType="Fcomment">
+		update fcomment f set
+		f.content=#{content}
+		where f.fcomment_id=#{fcommentId}
+	</update>
+	
+	<delete id="fcommentdelete" parameterType="int">
+		delete from fcomment f
+		where f.fcomment_id=#{fcommentId}
+	</delete>
+	
+	<delete id="fcommentdeleteall" parameterType="int">
+		delete from fcomment f
+		where f.feed_id=#{feedId}
+	</delete>
+
+</mapper>
