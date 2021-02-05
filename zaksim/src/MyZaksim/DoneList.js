@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3];
+const cards = [1, 2];
 
 export default function DoneList() {
   const classes = useStyles();
@@ -40,7 +40,13 @@ export default function DoneList() {
       <CssBaseline />
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Typography variant="h5" align="left" color="textPrimary" gutterBottom>
+          <Typography
+            variant="h5"
+            align="left"
+            color="textPrimary"
+            style={{ fontWeight: 'bold' }}
+            gutterBottom
+          >
             Merge 님의 완심
           </Typography>
           <Grid container spacing={4}>

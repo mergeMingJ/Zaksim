@@ -47,7 +47,7 @@ export default function IngList() {
       <CssBaseline />
       <main>
         {/* Hero unit */}
-        <div className={classes.heroContent}>
+        {/* <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               Zaksim 365 Days
@@ -70,10 +70,17 @@ export default function IngList() {
               </Grid>
             </div>
           </Container>
-        </div>
+        </div> */}
         {/* End hero unit */}
         <Container className={classes.cardGrid} maxWidth="md">
-          <Typography variant="h5" align="left" color="textPrimary" gutterBottom>
+          <Typography
+            variant="h5"
+            align="left"
+            color="textPrimary"
+            style={{ fontWeight: 'bold' }}
+            gutterBottom
+          >
+            {' '}
             Merge 님의 진심
           </Typography>
           <Grid container spacing={4}>

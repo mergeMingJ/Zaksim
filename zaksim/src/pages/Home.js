@@ -5,6 +5,7 @@ import RecommandCard from '../MainPage/RecommandCard';
 import Best from '../MainPage/Best';
 import { Box, Container, Typography } from '@material-ui/core';
 import FixedItem from '../TotalPage/FixedItem';
+import Footer from '../Fixed/Footer';
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
       <Category></Category>
       <Best></Best>
       <RecommandCard></RecommandCard>
+      <Footer></Footer>
     </div>
   );
 };

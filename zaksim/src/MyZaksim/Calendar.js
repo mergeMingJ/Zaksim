@@ -154,7 +154,7 @@ export default function Calendar() {
                 Zaksim 365 Days
               </Typography>
               <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                Merge님 작심 N일차 입니다.
+                Merge 님 작심 N일차 입니다.
               </Typography>
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
