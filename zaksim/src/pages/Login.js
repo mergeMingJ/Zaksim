@@ -14,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { func } from 'prop-types';
-import Cookies from 'js-cookie';
 
 function Copyright() {
   return (
