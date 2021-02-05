@@ -33,6 +33,11 @@ const Header = () => {
         </Grid>
         <Grid item md={2} align="center">
           <MenuItem href="/MyZaksim">{'나의작심'}</MenuItem>
+          </Grid>
+        <Grid item md={2} align="center">
+          <MenuItem href="/community">
+            {'열린마당'}
+          </MenuItem>
         </Grid>
         <Grid item md={2} align="center">
           <AccountCircle

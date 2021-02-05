@@ -5,3 +5,4 @@ export { default as Login } from './Login';
 export { default as SignUp } from './SignUp';
 export { default as Detail } from './Detail';
 export { default as Live } from './Live';
+export { default as Community } from './Community';
