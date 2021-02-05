@@ -12,6 +12,24 @@
 		from challenge c
 	</select>
 	
+	<select id="challengeoption" parameterType="Challenge" resultType="Challenge">
+		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
+				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
+				c.end_date endDate,c.hashtag
+		from challenge c
+		where c.is_public=1
+		<if test="categoryId != 0">
+			and c.category_id=#{categoryId}
+		</if>
+		<if test="isLive != 2">
+			and c.is_live=#{isLive}
+		</if>
+		<if test="hashtag != null and hashtag != ''">
+			and c.hashtag like concat('%', #{hashtag}, '%')
+		</if>
+	</select>
+	
 	<select id="challengeinfo" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
@@ -98,5 +116,17 @@
 		delete from cmember c
 		where c.challenge_id=#{challengeId}
 	</delete>
+	
+	
+	<select id="categorylist" resultType="Category">
+		select c.category_id categoryId,c.category_name categoryName
+		from category c
+	</select>
+	
+	<select id="challengecount" parameterType="int" resultType="int">
+		select count(c.challenge_id)
+		from challenge c
+		where c.category_id=#{categoryId}
+	</select>
 
 </mapper>

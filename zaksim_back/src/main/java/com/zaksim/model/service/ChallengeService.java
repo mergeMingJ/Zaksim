@@ -1,13 +1,16 @@
 package com.zaksim.model.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.zaksim.model.Category;
 import com.zaksim.model.Challenge;
 import com.zaksim.model.Cinfo;
 import com.zaksim.model.Cmember;
 
 public interface ChallengeService {
 	public List<Challenge> challengelist();
+	public List<Challenge> challengeoption(Challenge challenge) throws Exception;
 	public Challenge challengeinfo(int challengeId) throws Exception;
 	public boolean challengeinsert(Challenge challenge) throws Exception;
 	public boolean challengeupdate(Challenge challenge) throws Exception;
@@ -23,4 +26,7 @@ public interface ChallengeService {
 	public boolean cmemberupdate(Cmember cmember) throws Exception;
 	public boolean cmemberdelete(Cmember cmember) throws Exception;
 	public boolean cmemberdeleteall(int challengeId) throws Exception;
+	
+	public List<Category> categorylist();
+	public int challengecount(int categoryId) throws Exception;
 }

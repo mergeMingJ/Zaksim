@@ -1,5 +1,6 @@
 package com.zaksim.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zaksim.model.BasicResponse;
+import com.zaksim.model.Category;
+import com.zaksim.model.CategoryInfo;
 import com.zaksim.model.Challenge;
 import com.zaksim.model.Cinfo;
 import com.zaksim.model.Cmember;
@@ -42,6 +45,103 @@ public class ChallengeController {
         
         List<Challenge> list = challengeService.challengelist();
         if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/category")
+    @ApiOperation(value = "카테고리별 챌린지 목록")
+    public Object challengecategory(@RequestParam(required = true) final int categoryId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        Challenge challenge = new Challenge();
+        challenge.setCategoryId(categoryId);
+        challenge.setIsLive(2);
+        List<Challenge> list = challengeService.challengeoption(challenge);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/live")
+    @ApiOperation(value = "라이브별 챌린지 목록")
+    public Object challengelive(@RequestParam(required = true) final int isLive) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        Challenge challenge = new Challenge();
+        challenge.setIsLive(isLive);
+        List<Challenge> list = challengeService.challengeoption(challenge);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/hashtag")
+    @ApiOperation(value = "해시태그별 챌린지 목록")
+    public Object challengelist(@RequestParam(required = true) final String hashtag) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        Challenge challenge = new Challenge();
+        challenge.setHashtag(hashtag);
+        challenge.setIsLive(2);
+        List<Challenge> list = challengeService.challengeoption(challenge);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/main/category")
+    @ApiOperation(value = "메인화면 카테고리별 챌린지 현황")
+    public Object challengemaincategory() throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Category> clist = challengeService.categorylist();
+        List<CategoryInfo> list = new ArrayList<>();
+        for(int i = 0; i < clist.size(); i++) {
+        	Category c = clist.get(i);
+        	
+        	int count = challengeService.challengecount(c.getCategoryId());
+        	if(count == 0) continue;
+        	
+        	CategoryInfo cc = new CategoryInfo();
+        	cc.setCategory_id(c.getCategoryId());
+        	cc.setCategory_name(c.getCategoryName());
+        	cc.setCount(count);
+        	list.add(cc);
+        }
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = list;

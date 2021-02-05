@@ -1,10 +1,12 @@
 package com.zaksim.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zaksim.model.Category;
 import com.zaksim.model.Challenge;
 import com.zaksim.model.Cinfo;
 import com.zaksim.model.Cmember;
@@ -19,6 +21,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public List<Challenge> challengelist() {
 		return challengeMapper.challengelist();
+	}
+	
+	@Override
+	public List<Challenge> challengeoption(Challenge challenge) throws Exception{
+		return challengeMapper.challengeoption(challenge);
 	}
 
 	@Override
@@ -84,6 +91,16 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public boolean cmemberdeleteall(int challengeId) throws Exception {
 		return challengeMapper.cmemberdeleteall(challengeId) == 1;
+	}
+
+	@Override
+	public List<Category> categorylist() {
+		return challengeMapper.categorylist();
+	}
+
+	@Override
+	public int challengecount(int categoryId) throws Exception {
+		return challengeMapper.challengecount(categoryId);
 	}
 
 }
