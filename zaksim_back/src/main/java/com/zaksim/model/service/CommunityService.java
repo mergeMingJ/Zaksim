@@ -10,6 +10,7 @@ public interface CommunityService {
 	public Post postinfo(int postId) throws Exception;
 	public boolean postinsert(Post post) throws Exception;
 	public boolean postupdate(Post post) throws Exception;
+	public boolean postView(Post post) throws Exception;
 	public boolean postdelete(int postId) throws Exception;
 
 	public List<Comment> commentlist(int postId) throws Exception;

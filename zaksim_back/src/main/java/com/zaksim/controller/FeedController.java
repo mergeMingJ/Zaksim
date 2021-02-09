@@ -52,6 +52,25 @@ public class FeedController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 	
+	@GetMapping("/calander")
+    @ApiOperation(value = "캘린더 표시 목록")
+    public Object feedCalander(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Checkfeed> list = feedService.feedCalander(userId);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "캘린더 표시 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "캘린더에 표시할 정보가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
 	@GetMapping("/info")
     @ApiOperation(value = "인증글 정보")
     public Object feedinfo(@RequestParam(required = true) final int feedId) throws Exception {
@@ -106,34 +125,56 @@ public class FeedController {
     }
 	
 	@DeleteMapping("/delete")
-    @ApiOperation(value = "인증글 삭제")
+    @ApiOperation(value = "인증글 및 댓글 삭제")
     public Object feeddelete(@RequestParam(required = true) final int feedId) throws Exception {
         
         final BasicResponse result = new BasicResponse();
         
-        if(feedService.feeddelete(feedId)) {
-        	result.data = "success";
-            result.message = "인증글 삭제에 성공했습니다.";
+        feedService.fcommentdeleteall(feedId);
+        if(feedService.fcommentlist(feedId) == null) {
+        	if(feedService.feeddelete(feedId)) {
+        		result.data = "success";
+                result.message = "인증글 및 댓글 삭제에 성공했습니다.";
+        	}else {
+            	result.data = "fail";
+    			result.message = "인증글 삭제에 실패했습니다.";
+            }
         }else {
         	result.data = "fail";
-			result.message = "인증글 삭제에 실패했습니다.";
+			result.message = "댓글 삭제에 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/deleteall")
-    @ApiOperation(value = "챌린지 인증글 전부 삭제")
+    @ApiOperation(value = "챌린지 인증글 및 댓글 전부 삭제")
     public Object feeddeleteall(@RequestParam(required = true) final int challengeId) throws Exception {
         
         final BasicResponse result = new BasicResponse();
         
-        if(feedService.feeddeleteall(challengeId)) {
+        List<Checkfeed> list = feedService.feedlist(challengeId);
+        for(int i = 0; i < list.size(); i++) {
+        	Checkfeed feed = list.get(i);
+        	feedService.fcommentdeleteall(feed.getFeedId()); // 댓글을 전부 지운다
+        	if(feedService.fcommentlist(feed.getFeedId()) == null) { // 댓글이 없다면
+        		if(!feedService.feeddelete(feed.getFeedId())) { // 글을 지운다
+        			result.data = "fail";
+        			result.message = "인증글 삭제에 실패했습니다.";
+        			return new ResponseEntity<>(result, HttpStatus.OK);
+        		}
+        	}else {
+            	result.data = "fail";
+    			result.message = "댓글 삭제에 실패했습니다.";
+    			return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        }
+        if(feedService.feedlist(challengeId) == null) {
         	result.data = "success";
-            result.message = "인증글 전부 삭제에 성공했습니다.";
+            result.message = "모든 인증글 및 댓글 삭제에 성공했습니다.";
         }else {
         	result.data = "fail";
-			result.message = "인증글 전부 삭제에 실패했습니다.";
+			result.message = "댓글 삭제에 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -216,7 +257,8 @@ public class FeedController {
         
         final BasicResponse result = new BasicResponse();
         
-        if(feedService.fcommentdeleteall(feedId)) {
+        feedService.fcommentdeleteall(feedId);
+        if(feedService.fcommentlist(feedId) == null) {
         	result.data = "success";
             result.message = "인증글 댓글 전부 삭제에 성공했습니다.";
         }else {

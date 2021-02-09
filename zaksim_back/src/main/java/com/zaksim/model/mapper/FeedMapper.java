@@ -10,6 +10,7 @@ import com.zaksim.model.Fcomment;
 @Mapper
 public interface FeedMapper {
 	List<Checkfeed> feedlist(int challengeId) throws Exception;
+	List<Checkfeed> feedCalander(int userId) throws Exception;
 	Checkfeed feedinfo(int feedId) throws Exception;
 	int feedinsert(Checkfeed checkfeed) throws Exception;
 	int feedupdate(Checkfeed checkfeed) throws Exception;

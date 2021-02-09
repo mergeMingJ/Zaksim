@@ -13,6 +13,8 @@ import com.zaksim.model.Cmember;
 @Mapper
 public interface ChallengeMapper {
 	List<Challenge> challengelist();
+	List<Challenge> challengeIngDone(int userId) throws Exception;
+	List<Challenge> challengeWish(int userId) throws Exception;
 	List<Challenge> challengeoption(Challenge challenge) throws Exception;
 	Challenge challengeinfo(int challengeId) throws Exception;
 	int challengeinsert(Challenge challenge) throws Exception;
@@ -25,6 +27,7 @@ public interface ChallengeMapper {
 	int cinfodelete(int challengeId) throws Exception;
 	
 	List<Cmember> cmemberlist(int challengeId) throws Exception;
+	Cmember cmemberinfo(Cmember cmember) throws Exception;
 	int cmemberinsert(Cmember cmember) throws Exception;
 	int cmemberupdate(Cmember cmember) throws Exception;
 	int cmemberdelete(Cmember cmember) throws Exception;

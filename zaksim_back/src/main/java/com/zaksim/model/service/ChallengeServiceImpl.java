@@ -1,5 +1,7 @@
 package com.zaksim.model.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,35 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public List<Challenge> challengelist() {
 		return challengeMapper.challengelist();
+	}
+
+	@Override
+	public List<Challenge> challengeIng(int userId) throws Exception {
+		List<Challenge> list = challengeMapper.challengeIngDone(userId);;
+		List<Challenge> inglist = new ArrayList<>();
+		Date nowTime = new Date();
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			if(nowTime.before(challenge.getEndDate())) inglist.add(challenge);
+		}
+		return inglist;
+	}
+	
+	@Override
+	public List<Challenge> challengeDone(int userId) throws Exception {
+		List<Challenge> list = challengeMapper.challengeIngDone(userId);;
+		List<Challenge> donelist = new ArrayList<>();
+		Date nowTime = new Date();
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			if(nowTime.after(challenge.getEndDate())) donelist.add(challenge);
+		}
+		return donelist;
+	}
+
+	@Override
+	public List<Challenge> challengeWish(int userId) throws Exception {
+		return challengeMapper.challengeWish(userId);
 	}
 	
 	@Override
@@ -71,6 +102,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public List<Cmember> cmemberlist(int challengeId) throws Exception {
 		return challengeMapper.cmemberlist(challengeId);
+	}
+	
+	@Override
+	public Cmember cmemberinfo(Cmember cmember) throws Exception {
+		return challengeMapper.cmemberinfo(cmember);
 	}
 
 	@Override

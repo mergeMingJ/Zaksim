@@ -34,6 +34,11 @@ public class CommunityServiceImpl implements CommunityService {
 	public boolean postupdate(Post post) throws Exception {
 		return communityMapper.postupdate(post) == 1;
 	}
+	
+	@Override
+	public boolean postView(Post post) throws Exception{
+		return communityMapper.postView(post) == 1;
+	}
 
 	@Override
 	public boolean postdelete(int postId) throws Exception {

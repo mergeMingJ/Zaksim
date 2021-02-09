@@ -1,7 +1,11 @@
 package com.zaksim.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +125,56 @@ public class ChallengeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 	
+	@GetMapping("/ing")
+    @ApiOperation(value = "진심 챌린지 목록")
+    public Object challengeIng(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Challenge> list = challengeService.challengeIng(userId);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/done")
+    @ApiOperation(value = "완심 챌린지 목록")
+    public Object challengeDone(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Challenge> list = challengeService.challengeDone(userId);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/wish")
+    @ApiOperation(value = "찜한 챌린지 목록")
+    public Object challengeWish(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        result.data = "fail";
+		result.message = "아직 구현중이니까 기다려주세요~";
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
 	@GetMapping("/main/category")
     @ApiOperation(value = "메인화면 카테고리별 챌린지 현황")
     public Object challengemaincategory() throws Exception {
@@ -173,14 +227,33 @@ public class ChallengeController {
     }
 	
 	@PostMapping("/insert")
-    @ApiOperation(value = "챌린지 생성")
+    @ApiOperation(value = "챌린지 생성 - 소개 정보 생성 및 회원 테이블 추가")
     public Object challengeinsert(@RequestBody(required = true) final Challenge challenge) throws Exception {
         
         final BasicResponse result = new BasicResponse();
         
-        if(challengeService.challengeinsert(challenge)) {
-        	result.data = "success";
-            result.message = "챌린지 생성에 성공했습니다.";
+        if(challengeService.challengeinsert(challenge)) { // 챌린지를 생성한다
+        	int userId = challenge.getManagerId();
+        	List<Challenge> list = challengeService.challengeIng(userId); // 챌린지 목록을 불러온다
+        	int index = list.size() - 1;
+        	int challengeId = list.get(index).getChallengeId(); // 최근 생성된 챌린지 id를 불러온다
+        	Cinfo cinfo = new Cinfo();
+        	cinfo.setChallengeId(challengeId);
+        	if(challengeService.cinfoinsert(cinfo)) { // 챌린지 소개 정보 추가
+        		Cmember cmember = new Cmember();
+        		cmember.setChallengeId(challengeId);
+        		cmember.setUserId(userId);
+        		if(challengeService.cmemberinsert(cmember)) { // 회원 테이블 생성 및 관리자 추가
+        			result.data = "success";
+                    result.message = "챌린지 생성 및 기본 세팅에 성공했습니다.";
+        		}else {
+        			result.data = "fail";
+        			result.message = "회원 테이블 생성에 실패했습니다.";
+        		}
+        	}else {
+        		result.data = "fail";
+    			result.message = "챌린지 생성에 실패했습니다.";
+        	}
         }else {
         	result.data = "fail";
 			result.message = "챌린지 생성에 실패했습니다.";
@@ -212,12 +285,23 @@ public class ChallengeController {
         
         final BasicResponse result = new BasicResponse();
         
-        if(challengeService.challengedelete(challengeId)) {
-        	result.data = "success";
-            result.message = "챌린지 삭제에 성공했습니다.";
+        challengeService.cmemberdeleteall(challengeId);
+        if(challengeService.cmemberlist(challengeId) == null) {
+        	if(challengeService.cinfodelete(challengeId)) {
+        		if(challengeService.challengedelete(challengeId)) {
+                	result.data = "success";
+                    result.message = "챌린지 삭제에 성공했습니다.";
+                }else {
+                	result.data = "fail";
+        			result.message = "챌린지 삭제에 실패했습니다.";
+                }
+        	}else {
+        		result.data = "fail";
+    			result.message = "챌린지 소개 정보 삭제에 실패했습니다.";
+        	}
         }else {
         	result.data = "fail";
-			result.message = "챌린지 삭제에 실패했습니다.";
+			result.message = "챌린지 회원 정보 삭제에 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -249,13 +333,20 @@ public class ChallengeController {
         
         final BasicResponse result = new BasicResponse();
         
-        if(challengeService.cinfoinsert(cinfo)) {
-        	result.data = "success";
-            result.message = "챌린지 소개 정보 생성에 성공했습니다.";
+        int challengeId = cinfo.getChallengeId();
+        if(challengeService.cinfoinfo(challengeId) == null) {
+        	if(challengeService.cinfoinsert(cinfo)) {
+            	result.data = "success";
+                result.message = "챌린지 소개 정보 생성에 성공했습니다.";
+            }else {
+            	result.data = "fail";
+    			result.message = "챌린지 소개 정보 생성에 실패했습니다.";
+            }
         }else {
         	result.data = "fail";
-			result.message = "챌린지 소개 정보 생성에 실패했습니다.";
+			result.message = "챌린지 소개 정보가 이미 존재합니다.";
         }
+        
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -320,12 +411,22 @@ public class ChallengeController {
         
         final BasicResponse result = new BasicResponse();
         
-        if(challengeService.cmemberinsert(cmember)) {
-        	result.data = "success";
-            result.message = "챌린지 참여에 성공했습니다.";
+        int challengeId = cmember.getChallengeId();
+        int userId = cmember.getUserId();
+        Cmember cmObj = new Cmember();
+        cmObj.setChallengeId(challengeId);
+        cmObj.setUserId(userId);
+        if(challengeService.cmemberinfo(cmObj) == null) {
+        	if(challengeService.cmemberinsert(cmember)) {
+            	result.data = "success";
+                result.message = "챌린지 참여에 성공했습니다.";
+            }else {
+            	result.data = "fail";
+    			result.message = "챌린지 참여에 실패했습니다.";
+            }
         }else {
         	result.data = "fail";
-			result.message = "챌린지 참여에 실패했습니다.";
+			result.message = "이미 참여한 챌린지입니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);

@@ -53,13 +53,17 @@ public class CommunityController {
     }
 	
 	@GetMapping("/info")
-    @ApiOperation(value = "게시글 정보")
+    @ApiOperation(value = "게시글 정보 조회 및 조회수 1 증가")
     public Object postinfo(@RequestParam(required = true) final int postId) throws Exception {
         
         final BasicResponse result = new BasicResponse();
         
-        Post post = communityService.postinfo(postId);
-        if(post != null) {
+        Post postObj = communityService.postinfo(postId); // 조회수 증가 전 정보 불러오기
+        if(postObj != null) {
+        	int view = postObj.getView() + 1;
+        	postObj.setView(view);
+        	communityService.postView(postObj); // 조회수 1 증가
+        	Post post = communityService.postinfo(postId); // 조회수가 증가된 정보 다시 불러오기
         	result.data = "success";
             result.message = "게시글 정보를 불러옵니다.";
             result.object = post;
@@ -106,17 +110,24 @@ public class CommunityController {
     }
 	
 	@DeleteMapping("/delete")
-    @ApiOperation(value = "게시글 삭제")
+    @ApiOperation(value = "게시글 삭제 및 하위 댓글 전부 삭제")
     public Object postdelete(@RequestParam(required = true) final int postId) throws Exception {
         
         final BasicResponse result = new BasicResponse();
         
-        if(communityService.postdelete(postId)) {
-        	result.data = "success";
-            result.message = "게시글 삭제에 성공했습니다.";
+        communityService.commentdeleteall(postId); // 댓글 먼저 삭제
+        if(communityService.commentlist(postId) == null) {
+        	communityService.postdelete(postId); // 게시글 삭제
+        	if(communityService.postinfo(postId) == null) {
+        		result.data = "success";
+                result.message = "게시글 및 댓글 삭제에 성공했습니다.";
+        	}else {
+        		result.data = "fail";
+    			result.message = "=댓글 전부 삭제했지만 게시글 삭제에 실패했습니다.";
+        	}
         }else {
         	result.data = "fail";
-			result.message = "게시글 삭제에 실패했습니다.";
+			result.message = "게시글 댓글 삭제에 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);

@@ -6,20 +6,20 @@
 	
 	<select id="postlist" resultType="Post">
 		select p.post_id postId,p.user_id userId,p.title,p.content,p.category_id categoryId,
-				p.file_path filePath,p.regtime
+				p.file_path filePath,p.regtime,p.view
 		from post p
 	</select>
 	
 	<select id="postinfo" parameterType="int" resultType="Post">
 		select p.post_id postId,p.user_id userId,p.title,p.content,p.category_id categoryId,
-				p.file_path filePath,p.regtime
+				p.file_path filePath,p.regtime,p.view
 		from post p
 		where p.post_id=#{postId}
 	</select>
 	
 	<insert id="postinsert" parameterType="Post">
-		insert into post(user_id,title,content,category_id,file_path)
-		values(#{userId},#{title},#{content},#{categoryId},#{filePath})
+		insert into post(user_id,title,content,category_id,file_path,view)
+		values(#{userId},#{title},#{content},#{categoryId},#{filePath},0)
 	</insert>
 	
 	<update id="postupdate" parameterType="Post">
@@ -28,9 +28,15 @@
 		where p.post_id=#{postId}
 	</update>
 	
-	<delete id="postdelete" parameterType="int">
-		delete from post p
+	<update id="postView" parameterType="Post">
+		update post p set
+		p.view=#{view}
 		where p.post_id=#{postId}
+	</update>
+	
+	<delete id="postdelete" parameterType="int">
+		delete from post
+		where post_id=#{postId}
 	</delete>
 	
 	
@@ -53,13 +59,13 @@
 	</update>
 	
 	<delete id="commentdelete" parameterType="int">
-		delete from comment c
-		where c.comment_id=#{commentId}
+		delete from comment
+		where comment_id=#{commentId}
 	</delete>
 	
 	<delete id="commentdeleteall" parameterType="int">
-		delete from comment c
-		where c.post_id=#{postId}
+		delete from comment
+		where post_id=#{postId}
 	</delete>
 	
 </mapper>
