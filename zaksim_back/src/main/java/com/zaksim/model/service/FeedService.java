@@ -7,6 +7,7 @@ import com.zaksim.model.Fcomment;
 
 public interface FeedService {
 	public List<Checkfeed> feedlist(int challengeId) throws Exception;
+	public List<Checkfeed> feedCalander(int userId) throws Exception;
 	public Checkfeed feedinfo(int feedId) throws Exception;
 	public boolean feedinsert(Checkfeed checkfeed) throws Exception;
 	public boolean feedupdate(Checkfeed checkfeed) throws Exception;

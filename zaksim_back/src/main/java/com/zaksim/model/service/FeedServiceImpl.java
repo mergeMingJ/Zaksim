@@ -19,6 +19,11 @@ public class FeedServiceImpl implements FeedService {
 	public List<Checkfeed> feedlist(int challengeId) throws Exception {
 		return feedMapper.feedlist(challengeId);
 	}
+	
+	@Override
+	public List<Checkfeed> feedCalander(int userId) throws Exception{
+		return feedMapper.feedCalander(userId);
+	}
 
 	@Override
 	public Checkfeed feedinfo(int feedId) throws Exception {

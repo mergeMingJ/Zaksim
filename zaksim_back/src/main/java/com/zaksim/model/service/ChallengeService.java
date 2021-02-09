@@ -10,6 +10,9 @@ import com.zaksim.model.Cmember;
 
 public interface ChallengeService {
 	public List<Challenge> challengelist();
+	public List<Challenge> challengeIng(int userId) throws Exception;
+	public List<Challenge> challengeDone(int userId) throws Exception;
+	public List<Challenge> challengeWish(int userId) throws Exception;
 	public List<Challenge> challengeoption(Challenge challenge) throws Exception;
 	public Challenge challengeinfo(int challengeId) throws Exception;
 	public boolean challengeinsert(Challenge challenge) throws Exception;
@@ -22,6 +25,7 @@ public interface ChallengeService {
 	public boolean cinfodelete(int challengeId) throws Exception;
 	
 	public List<Cmember> cmemberlist(int challengeId) throws Exception;
+	public Cmember cmemberinfo(Cmember cmember) throws Exception;
 	public boolean cmemberinsert(Cmember cmember) throws Exception;
 	public boolean cmemberupdate(Cmember cmember) throws Exception;
 	public boolean cmemberdelete(Cmember cmember) throws Exception;

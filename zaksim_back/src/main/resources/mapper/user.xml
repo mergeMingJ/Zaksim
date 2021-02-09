@@ -19,8 +19,8 @@
 	</select>
 	
 	<insert id="usersignup" parameterType="User">
-		insert into user(email,password,nickname)
-		values(#{email},#{password},#{nickname})
+		insert into user(email,password,nickname,grade,point)
+		values(#{email},#{password},#{nickname},1,500)
 	</insert>
 	
 	<update id="userupdate" parameterType="User">
@@ -33,8 +33,8 @@
 	</update>
 	
 	<delete id="userdelete" parameterType="int">
-		delete from user u
-		where u.user_id=#{userId}
+		delete from user
+		where user_id=#{userId}
 	</delete>
 	
 	

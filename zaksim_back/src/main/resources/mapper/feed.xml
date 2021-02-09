@@ -11,6 +11,13 @@
 		where c.challenge_id=#{challengeId}
 	</select>
 	
+	<select id="feedCalander" parameterType="int" resultType="Checkfeed">
+		select c.feed_id feedId,c.challenge_id challengeId,ch.title,c.user_id userId,c.regtime
+		from checkfeed c join challenge ch
+        on c.challenge_id = ch.challenge_id
+		where c.user_id=#{userId}
+	</select>
+	
 	<select id="feedinfo" parameterType="int" resultType="Checkfeed">
 		select c.feed_id feedId,c.challenge_id challengeId,c.user_id userId,
 				c.title,c.content,c.img_path imgPath,c.regtime
@@ -30,13 +37,13 @@
 	</update>
 	
 	<delete id="feeddelete" parameterType="int">
-		delete from checkfeed c
-		where c.feed_id=#{feedId}
+		delete from checkfeed
+		where feed_id=#{feedId}
 	</delete>
 	
 	<delete id="feeddeleteall" parameterType="int">
-		delete from checkfeed c
-		where c.challenge_id=#{challengeId}
+		delete from checkfeed
+		where challenge_id=#{challengeId}
 	</delete>
 	
 	
@@ -59,13 +66,13 @@
 	</update>
 	
 	<delete id="fcommentdelete" parameterType="int">
-		delete from fcomment f
-		where f.fcomment_id=#{fcommentId}
+		delete from fcomment
+		where fcomment_id=#{fcommentId}
 	</delete>
 	
 	<delete id="fcommentdeleteall" parameterType="int">
-		delete from fcomment f
-		where f.feed_id=#{feedId}
+		delete from fcomment
+		where feed_id=#{feedId}
 	</delete>
 
 </mapper>
