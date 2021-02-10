@@ -237,12 +237,12 @@ public class ChallengeController {
         
         Challenge challenge = challengeService.challengeinfo(challengeId);
         ChallengeInfo challengeInfo = challengeService.challengeconvert(challenge, 1);
-        if(challenge != null) {
-        	int nowUser = challengeService.cmembercount(challenge.getChallengeId());
-        	challenge.setNowUser(nowUser);
+        if(challengeInfo != null) {
+        	int nowUser = challengeService.cmembercount(challengeInfo.getChallengeId());
+        	challengeInfo.setNowUser(nowUser);
         	result.data = "success";
             result.message = "챌린지 정보를 불러옵니다.";
-            result.object = challenge;
+            result.object = challengeInfo;
         }else {
         	result.data = "fail";
 			result.message = "챌린지가 없습니다.";
