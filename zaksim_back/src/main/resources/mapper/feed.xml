@@ -9,6 +9,16 @@
 				c.title,c.content,c.img_path imgPath,c.regtime
 		from checkfeed c
 		where c.challenge_id=#{challengeId}
+		order by c.regtime desc
+	</select>
+	
+	<select id="userfeedlist" parameterType="Checkfeed" resultType="Checkfeed">
+		select c.feed_id feedId,c.challenge_id challengeId,c.user_id userId,
+				c.title,c.content,c.img_path imgPath,c.regtime
+		from checkfeed c
+		where c.challenge_id=#{challengeId}
+		and c.user_id=#{userId}
+		order by c.regtime desc
 	</select>
 	
 	<select id="feedCalander" parameterType="int" resultType="Checkfeed">
@@ -52,6 +62,7 @@
 				f.content,f.regtime
 		from fcomment f
 		where f.feed_id=#{feedId}
+		order by f.regtime desc
 	</select>
 	
 	<insert id="fcommentinsert" parameterType="Fcomment">

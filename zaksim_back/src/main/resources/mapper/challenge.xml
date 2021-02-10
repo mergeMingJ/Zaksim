@@ -6,38 +6,45 @@
 
 	<select id="challengelist" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
-				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
 				c.end_date endDate,c.hashtag
-		from challenge c
+		from challenge c join user u
+		on c.manager_id = u.user_id
+		order by c.start_date desc
 	</select>
 	
 	<select id="challengeIngDone" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
-				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
 				c.end_date endDate,c.hashtag
-		from challenge c
+		from challenge c join user u
+		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
 						where user_id = #{userId})
+		order by c.start_date desc
 	</select>
 	
 	<select id="challengeWish" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
-				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
 				c.end_date endDate,c.hashtag
-		from challenge c
+		from challenge c join user u
+		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
 						where user_id = #{userId})
+		order by c.start_date desc
 	</select>
 	
 	<select id="challengeoption" parameterType="Challenge" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
-				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
 				c.end_date endDate,c.hashtag
-		from challenge c
+		from challenge c join user u
+		on c.manager_id = u.user_id
 		where c.is_public=1
 		<if test="categoryId != 0">
 			and c.category_id=#{categoryId}
@@ -48,14 +55,16 @@
 		<if test="hashtag != null and hashtag != ''">
 			and c.hashtag like concat('%', #{hashtag}, '%')
 		</if>
+		order by c.start_date desc
 	</select>
 	
 	<select id="challengeinfo" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
-				c.manager_nickname managerNickname,c.is_public isPubic,c.is_live isLive,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
 				c.end_date endDate,c.hashtag
-		from challenge c
+		from challenge c join user u
+		on c.manager_id = u.user_id
 		where c.challenge_id=#{challengeId}
 	</select>
 
@@ -110,6 +119,13 @@
 	
 	<select id="cmemberlist" parameterType="int" resultType="Cmember">
 		select c.cmember_id cmemberId,c.challenge_id challengeId,c.user_id userId,c.progress
+		from cmember c
+		where c.challenge_id=#{challengeId}
+		order by c.cmember_id desc
+	</select>
+	
+	<select id="cmembercount" parameterType="int" resultType="int">
+		select count(c.cmember_id)
 		from cmember c
 		where c.challenge_id=#{challengeId}
 	</select>

@@ -10,15 +10,21 @@ import org.springframework.stereotype.Service;
 
 import com.zaksim.model.Category;
 import com.zaksim.model.Challenge;
+import com.zaksim.model.ChallengeInfo;
+import com.zaksim.model.Checkfeed;
 import com.zaksim.model.Cinfo;
 import com.zaksim.model.Cmember;
 import com.zaksim.model.mapper.ChallengeMapper;
+import com.zaksim.model.mapper.FeedMapper;
 
 @Service
 public class ChallengeServiceImpl implements ChallengeService {
 
 	@Autowired
 	private ChallengeMapper challengeMapper;
+	
+	@Autowired
+	private FeedMapper feedMapper;
 	
 	@Override
 	public List<Challenge> challengelist() {
@@ -105,6 +111,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	}
 	
 	@Override
+	public int cmembercount(int challengeId) throws Exception{
+		return challengeMapper.cmembercount(challengeId);
+	}
+	
+	@Override
 	public Cmember cmemberinfo(Cmember cmember) throws Exception {
 		return challengeMapper.cmemberinfo(cmember);
 	}
@@ -137,6 +148,49 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public int challengecount(int categoryId) throws Exception {
 		return challengeMapper.challengecount(categoryId);
+	}
+
+	@Override
+	public List<ChallengeInfo> setNowUser(List<Challenge> list, int userId) throws Exception {
+		List<ChallengeInfo> newList = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++) {
+        	Challenge challenge = list.get(i);
+        	ChallengeInfo chObj = challengeconvert(challenge,userId);
+        	
+        	newList.add(chObj); // 리스트에 추가
+        }
+        return newList;
+	}
+	
+	@Override
+	public ChallengeInfo challengeconvert(Challenge challenge, int userId) throws Exception{
+		ChallengeInfo chObj = new ChallengeInfo(challenge);
+    	int nowUser = challengeMapper.cmembercount(chObj.getChallengeId());
+    	chObj.setNowUser(nowUser); // 현재 참여 인원 가져오기
+    	
+    	int maxProgress = dateDiff(chObj.getStartDate(),chObj.getEndDate()); // 최종 진행률
+    	
+    	Date nowTime = new Date();
+    	
+    	int totalProgress = 0; // 현재 진행률
+    	if(nowTime.after(chObj.getEndDate())) totalProgress = dateDiff(chObj.getStartDate(),chObj.getEndDate());
+    	else totalProgress = dateDiff(chObj.getStartDate(),nowTime);
+    	chObj.setTotalProgress(totalProgress * 100 / maxProgress);
+    	
+    	Checkfeed fObj = new Checkfeed();
+    	fObj.setChallengeId(chObj.getChallengeId());
+    	fObj.setUserId(userId);
+    	List<Checkfeed> clist = feedMapper.userfeedlist(fObj);
+    	int userProgress = clist.size() * 100 / maxProgress;
+    	if(userProgress < 0) userProgress = 0;
+    	chObj.setUserProgress(userProgress);
+    	return chObj;
+	}
+	
+	private int dateDiff(Date date1, Date date2) {
+		long deltime = date2.getTime() - date1.getTime();
+		long deldate = deltime / (24 * 60 * 60 * 1000);
+		return (int)deldate;
 	}
 
 }

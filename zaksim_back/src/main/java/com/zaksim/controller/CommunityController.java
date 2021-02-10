@@ -116,14 +116,14 @@ public class CommunityController {
         final BasicResponse result = new BasicResponse();
         
         communityService.commentdeleteall(postId); // 댓글 먼저 삭제
-        if(communityService.commentlist(postId) == null) {
+        if(communityService.commentlist(postId).size() == 0) {
         	communityService.postdelete(postId); // 게시글 삭제
         	if(communityService.postinfo(postId) == null) {
         		result.data = "success";
                 result.message = "게시글 및 댓글 삭제에 성공했습니다.";
         	}else {
         		result.data = "fail";
-    			result.message = "=댓글 전부 삭제했지만 게시글 삭제에 실패했습니다.";
+    			result.message = "댓글 전부 삭제했지만 게시글 삭제에 실패했습니다.";
         	}
         }else {
         	result.data = "fail";
@@ -210,7 +210,8 @@ public class CommunityController {
         
         final BasicResponse result = new BasicResponse();
         
-        if(communityService.commentdeleteall(postId)) {
+        communityService.commentdeleteall(postId);
+        if(communityService.commentlist(postId).size() == 0) {
         	result.data = "success";
             result.message = "댓글 전부 삭제에 성공했습니다.";
         }else {

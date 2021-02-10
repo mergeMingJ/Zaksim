@@ -56,4 +56,33 @@
 		where n.notice_id=#{noticeId}
 	</update>
 	
+	<delete id="noticedeleteall" parameterType="int">
+		delete from notice
+		where user_id=#{userId}
+	</delete>
+	
+	<select id="heartlist" parameterType="int" resultType="Heart">
+		select h.heart_id heartId,h.user_id userId,h.challenge_id challengeId
+		from heart h
+		where h.user_id=#{userId}
+	</select>
+	
+	<select id="heartinfo" parameterType="Heart" resultType="Heart">
+		select h.heart_id heartId,h.user_id userId,h.challenge_id challengeId
+		from heart h
+		where h.user_id=#{userId}
+		and h.challenge_id=#{challengeId}
+	</select>
+	
+	<insert id="heartinsert" parameterType="Heart">
+		insert into heart(user_id,challenge_id)
+		values(#{userId},#{challengeId})
+	</insert>
+	
+	<delete id="heartdelete" parameterType="Heart">
+		delete from heart
+		where h.user_id=#{userId}
+		and h.challenge_id=#{challengeId}
+	</delete>
+	
 </mapper>

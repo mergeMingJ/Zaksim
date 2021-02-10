@@ -131,7 +131,7 @@ public class FeedController {
         final BasicResponse result = new BasicResponse();
         
         feedService.fcommentdeleteall(feedId);
-        if(feedService.fcommentlist(feedId) == null) {
+        if(feedService.fcommentlist(feedId).size() == 0) {
         	if(feedService.feeddelete(feedId)) {
         		result.data = "success";
                 result.message = "인증글 및 댓글 삭제에 성공했습니다.";
@@ -157,7 +157,7 @@ public class FeedController {
         for(int i = 0; i < list.size(); i++) {
         	Checkfeed feed = list.get(i);
         	feedService.fcommentdeleteall(feed.getFeedId()); // 댓글을 전부 지운다
-        	if(feedService.fcommentlist(feed.getFeedId()) == null) { // 댓글이 없다면
+        	if(feedService.fcommentlist(feed.getFeedId()).size() == 0) { // 댓글이 없다면
         		if(!feedService.feeddelete(feed.getFeedId())) { // 글을 지운다
         			result.data = "fail";
         			result.message = "인증글 삭제에 실패했습니다.";
@@ -169,7 +169,7 @@ public class FeedController {
     			return new ResponseEntity<>(result, HttpStatus.OK);
             }
         }
-        if(feedService.feedlist(challengeId) == null) {
+        if(feedService.feedlist(challengeId).size() == 0) {
         	result.data = "success";
             result.message = "모든 인증글 및 댓글 삭제에 성공했습니다.";
         }else {
@@ -258,7 +258,7 @@ public class FeedController {
         final BasicResponse result = new BasicResponse();
         
         feedService.fcommentdeleteall(feedId);
-        if(feedService.fcommentlist(feedId) == null) {
+        if(feedService.fcommentlist(feedId).size() == 0) {
         	result.data = "success";
             result.message = "인증글 댓글 전부 삭제에 성공했습니다.";
         }else {
