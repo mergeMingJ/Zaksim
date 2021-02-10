@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zaksim.model.Heart;
 import com.zaksim.model.Notice;
 import com.zaksim.model.User;
 import com.zaksim.model.mapper.UserMapper;
@@ -53,6 +54,31 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean noticeupdate(Notice notice) throws Exception {
 		return userMapper.noticeupdate(notice) == 1;
+	}
+	
+	@Override
+	public boolean noticedeleteall(int userId) throws Exception {
+		return userMapper.noticedeleteall(userId) == 1;
+	}
+
+	@Override
+	public List<Heart> heartlist(int userId) throws Exception {
+		return userMapper.heartlist(userId);
+	}
+
+	@Override
+	public Heart heartinfo(Heart heart) throws Exception {
+		return userMapper.heartinfo(heart);
+	}
+
+	@Override
+	public boolean heartinsert(Heart heart) throws Exception {
+		return userMapper.heartinsert(heart) == 1;
+	}
+
+	@Override
+	public boolean heartdelete(Heart heart) throws Exception {
+		return userMapper.heartdelete(heart) == 1;
 	}
 
 }

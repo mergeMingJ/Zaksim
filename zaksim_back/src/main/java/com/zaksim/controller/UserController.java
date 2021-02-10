@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zaksim.model.BasicResponse;
+import com.zaksim.model.Heart;
 import com.zaksim.model.Notice;
 import com.zaksim.model.User;
 import com.zaksim.model.service.JwtService;
@@ -196,6 +197,105 @@ public class UserController {
         }else {
         	result.data = "fail";
 			result.message = "알림을 읽는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@DeleteMapping("/notice/deleteall")
+    @ApiOperation(value = "알림 전부 삭제")
+    public Object noticedeleteall(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        userService.noticedeleteall(userId);
+        if(userService.noticelist(userId).size() == 0) {
+        	result.data = "success";
+            result.message = "알림을 전부 삭제하는데 성공했습니다.";
+        }else {
+        	result.data = "fail";
+			result.message = "알림을 전부 삭제하는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/heart")
+    @ApiOperation(value = "회원 찜목록")
+    public Object heartlist(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Heart> list = userService.heartlist(userId);
+        if(list != null) {
+        	result.data = "success";
+            result.message = "찜목록을 읽는데 성공했습니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "찜목록을 읽는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/heart/info")
+    @ApiOperation(value = "회원 찜 정보")
+    public Object heartinfo(@RequestParam(required = true) final int userId,
+    		@RequestParam(required = true) final int challengeId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        Heart obj = new Heart();
+        obj.setUserId(userId);
+        obj.setChallengeId(challengeId);
+        Heart heart = userService.heartinfo(obj);
+        if(heart != null) {
+        	result.data = "success";
+            result.message = "찜 정보를 불러오는데 성공했습니다.";
+            result.object = heart;
+        }else {
+        	result.data = "fail";
+			result.message = "찜 정보를 불러오는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@PostMapping("/heart")
+    @ApiOperation(value = "찜목록에 추가")
+    public Object heartinsert(@RequestBody(required = true) final Heart heart) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        if(userService.heartinsert(heart)) {
+        	result.data = "success";
+            result.message = "찜목록에 추가하는데 성공했습니다.";
+        }else {
+        	result.data = "fail";
+			result.message = "찜목록에 추가하는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@DeleteMapping("/heart")
+    @ApiOperation(value = "찜목록에서 제거")
+    public Object heartdelete(@RequestParam(required = true) final int userId,
+    		@RequestParam(required = true) final int challengeId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        Heart obj = new Heart();
+        obj.setUserId(userId);
+        obj.setChallengeId(challengeId);
+        Heart heart = userService.heartinfo(obj);
+        if(userService.heartdelete(heart)) {
+        	result.data = "success";
+            result.message = "찜목록에서 제거하는데 성공했습니다.";
+        }else {
+        	result.data = "fail";
+			result.message = "찜목록에서 제거하는데 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);

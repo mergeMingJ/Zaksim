@@ -27,6 +27,7 @@ public interface ChallengeMapper {
 	int cinfodelete(int challengeId) throws Exception;
 	
 	List<Cmember> cmemberlist(int challengeId) throws Exception;
+	int cmembercount(int challengeId) throws Exception;
 	Cmember cmemberinfo(Cmember cmember) throws Exception;
 	int cmemberinsert(Cmember cmember) throws Exception;
 	int cmemberupdate(Cmember cmember) throws Exception;

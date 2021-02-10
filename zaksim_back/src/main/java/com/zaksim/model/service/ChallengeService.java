@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.zaksim.model.Category;
 import com.zaksim.model.Challenge;
+import com.zaksim.model.ChallengeInfo;
 import com.zaksim.model.Cinfo;
 import com.zaksim.model.Cmember;
 
@@ -25,6 +26,7 @@ public interface ChallengeService {
 	public boolean cinfodelete(int challengeId) throws Exception;
 	
 	public List<Cmember> cmemberlist(int challengeId) throws Exception;
+	public int cmembercount(int challengeId) throws Exception;
 	public Cmember cmemberinfo(Cmember cmember) throws Exception;
 	public boolean cmemberinsert(Cmember cmember) throws Exception;
 	public boolean cmemberupdate(Cmember cmember) throws Exception;
@@ -33,4 +35,7 @@ public interface ChallengeService {
 	
 	public List<Category> categorylist();
 	public int challengecount(int categoryId) throws Exception;
+	
+	public List<ChallengeInfo> setNowUser(List<Challenge> list, int userId) throws Exception;
+	public ChallengeInfo challengeconvert(Challenge challenge, int userId) throws Exception;
 }

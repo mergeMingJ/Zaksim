@@ -8,6 +8,7 @@
 		select p.post_id postId,p.user_id userId,p.title,p.content,p.category_id categoryId,
 				p.file_path filePath,p.regtime,p.view
 		from post p
+		order by p.regtime desc
 	</select>
 	
 	<select id="postinfo" parameterType="int" resultType="Post">
@@ -45,6 +46,7 @@
 				c.content,c.regtime
 		from comment c
 		where c.post_id=#{postId}
+		order by c.regtime desc
 	</select>
 	
 	<insert id="commentinsert" parameterType="Comment">
