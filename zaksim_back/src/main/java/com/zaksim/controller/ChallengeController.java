@@ -258,10 +258,20 @@ public class ChallengeController {
         final BasicResponse result = new BasicResponse();
         
         Date time = new Date();
-        if(challenge.getStartDate() == null) challenge.setStartDate(time);
-        if(challenge.getEndDate() == null) challenge.setEndDate(time);
+        if(challenge.getStartDate() == null || challenge.getStartDate().equals("")) challenge.setStartDate(time);
+        if(challenge.getEndDate() == null || challenge.getEndDate().equals("")) challenge.setEndDate(time);
         if(challengeService.challengeinsert(challenge)) { // 챌린지를 생성한다
         	int userId = challenge.getManagerId();
+        	if(userService.userinfo(userId) == null) { // 회원 테이블 생성 및 관리자 추가
+    			result.data = "fail";
+                result.message = "회원 아이디에 해당하는 회원이 없습니다.";
+                new ResponseEntity<>(result, HttpStatus.OK);
+    		}
+        	if(challenge.getCategoryId() < 1) {
+        		result.data = "fail";
+                result.message = "정확한 카테고리 아이디를 입력해주세요.";
+                new ResponseEntity<>(result, HttpStatus.OK);
+        	}
         	List<Challenge> list = challengeService.challengeIng(userId); // 챌린지 목록을 불러온다
         	int index = list.size() - 1;
         	int challengeId = list.get(index).getChallengeId(); // 최근 생성된 챌린지 id를 불러온다
@@ -277,14 +287,17 @@ public class ChallengeController {
         		}else {
         			result.data = "fail";
         			result.message = "회원 테이블 생성에 실패했습니다.";
+        			new ResponseEntity<>(result, HttpStatus.OK);
         		}
         	}else {
         		result.data = "fail";
     			result.message = "챌린지 생성에 실패했습니다.";
+    			new ResponseEntity<>(result, HttpStatus.OK);
         	}
         }else {
         	result.data = "fail";
 			result.message = "챌린지 생성에 실패했습니다.";
+			new ResponseEntity<>(result, HttpStatus.OK);
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
