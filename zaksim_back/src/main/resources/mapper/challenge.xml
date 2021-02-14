@@ -101,7 +101,7 @@
 	<insert id="cinfoinsert" parameterType="Cinfo">
 		insert into cinfo(challenge_id,guide,due_time,member_condition,entry_point,desc_info,desc_rec,
 				desc_expert,desc_warn)
-		values(#{challengeId},#{guide},#{dueTIme},#{memberCondition},0,#{descInfo},#{descRec},
+		values(#{challengeId},#{guide},#{dueTime},#{memberCondition},0,#{descInfo},#{descRec},
 				#{descExpert},#{descWarn})
 	</insert>
 	
