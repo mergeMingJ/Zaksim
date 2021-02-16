@@ -1,5 +1,6 @@
 package com.zaksim.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.zaksim.model.Comment;
 import com.zaksim.model.Post;
+import com.zaksim.model.User;
 import com.zaksim.model.mapper.CommunityMapper;
+import com.zaksim.model.mapper.UserMapper;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -15,9 +18,31 @@ public class CommunityServiceImpl implements CommunityService {
 	@Autowired
 	private CommunityMapper communityMapper;
 	
+	@Autowired
+	private UserMapper userMapper;
+	
 	@Override
 	public List<Post> postlist() {
 		return communityMapper.postlist();
+	}
+	
+	@Override
+	public List<Post> postOption(String key, String word) throws Exception{
+		List<Post> plist = communityMapper.postlist();
+		List<Post> list = new ArrayList<>();
+		for(int i = 0; i < plist.size(); i++) {
+			Post post = plist.get(i);
+			String title = post.getTitle();
+			String content = post.getContent();
+			User user = userMapper.userinfo(post.getUserId());
+			String nickname = user.getNickname();
+			
+			if(key.equals("제목") && title.contains(word)) list.add(post);
+			else if(key.equals("내용") && content.contains(word)) list.add(post);
+			else if(key.equals("작성자") && nickname.contains(word)) list.add(post);
+		}
+		
+		return list;
 	}
 
 	@Override

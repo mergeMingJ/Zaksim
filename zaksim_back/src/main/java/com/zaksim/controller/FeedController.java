@@ -40,7 +40,7 @@ public class FeedController {
         final BasicResponse result = new BasicResponse();
         
         List<Checkfeed> list = feedService.feedlist(challengeId);
-        if(list != null) {
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "인증글 목록을 불러옵니다.";
             result.object = list;
@@ -59,7 +59,7 @@ public class FeedController {
         final BasicResponse result = new BasicResponse();
         
         List<Checkfeed> list = feedService.feedCalander(userId);
-        if(list != null) {
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "캘린더 표시 목록을 불러옵니다.";
             result.object = list;
@@ -188,7 +188,7 @@ public class FeedController {
         final BasicResponse result = new BasicResponse();
         
         List<Fcomment> list = feedService.fcommentlist(feedId);
-        if(list != null) {
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "인증글 댓글 목록을 불러옵니다.";
             result.object = list;

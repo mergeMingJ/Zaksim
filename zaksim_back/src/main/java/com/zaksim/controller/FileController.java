@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/file")
 public class FileController {
 
-    private static String UPLOADED_FOLDER = "/home/ubuntu/apps/zaksim_back/src/main/resources/images/";
+    private static String UPLOADED_FOLDER = "/home/ubuntu/images/";
 	@PostMapping("/upload")
     public String file(@RequestParam("file") MultipartFile file){
  

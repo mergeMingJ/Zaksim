@@ -156,7 +156,7 @@ public class UserController {
         final BasicResponse result = new BasicResponse();
         
         List<Notice> list = userService.noticelist(userId);
-        if(list != null) {
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "알림 목록을 불러옵니다.";
             result.object = list;

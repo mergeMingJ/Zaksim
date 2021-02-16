@@ -15,6 +15,17 @@ public class Cinfo {
 	private String descWarn;
 	
 	public Cinfo() {}
+	
+	public Cinfo(ChallengeInsertInfo challengeInsertInfo) {
+		super();
+		this.guide = challengeInsertInfo.getGuide();
+		this.memberCondition = challengeInsertInfo.getMemberCondition();
+		this.entryPoint = challengeInsertInfo.getEntryPoint();
+		this.descInfo = challengeInsertInfo.getDescInfo();
+		this.descRec = challengeInsertInfo.getDescRec();
+		this.descExpert = challengeInsertInfo.getDescExpert();
+		this.descWarn = challengeInsertInfo.getDescWarn();
+	}
 
 	public Cinfo(int challengeId, String guide, String dueTime, String memberCondition, int entryPoint, String descInfo,
 			String descRec, String descExpert, String descWarn) {
