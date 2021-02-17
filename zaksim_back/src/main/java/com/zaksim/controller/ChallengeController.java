@@ -92,8 +92,8 @@ public class ChallengeController {
 	
 	@GetMapping("/search")
     @ApiOperation(value = "챌린지 검색")
-    public Object challengeSearch(@ApiParam(required = true) @RequestParam String title,
-    		@ApiParam(required = true) @RequestParam String hashtag,
+    public Object challengeSearch(@ApiParam @RequestParam String title,
+    		@ApiParam @RequestParam String hashtag,
     		@ApiParam(required = true) @RequestParam String sort) throws Exception {
         
         final BasicResponse result = new BasicResponse();
@@ -109,8 +109,10 @@ public class ChallengeController {
         else if(sort.equals("오래된순")) list = challengeService.challengelistreverse();
         else if(sort.equals("인기순")) list = challengeService.challengeBest(clist);
         else list = challengeService.challengelist();
+        
         List<Challenge> hlist = challengeService.challengeHashtag(list, hashtag);
-        List<ChallengeInfo> newList = challengeService.setNowUser(hlist,1);
+        List<Challenge> klist = challengeService.challengeKeyword(hlist, title);
+        List<ChallengeInfo> newList = challengeService.setNowUser(klist,1);
         
         if(newList != null) {
         	result.data = "success";
@@ -627,20 +629,20 @@ public class ChallengeController {
         int challengeId = cmember.getChallengeId();
         int userId = cmember.getUserId();
         
-        int entryPoint = challengeService.cinfoinfo(challengeId).getEntryPoint();
-        User user = userService.userinfo(userId);
-        int point = user.getPoint();
-        if(point < entryPoint) {
-        	result.data = "fail";
-            result.message = "포인트가 부족합니다.";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        user.setPoint(point-entryPoint);
-        if(!userService.userupdate(user)) {
-        	result.data = "fail";
-            result.message = "참여 포인트 삭감에 실패했습니다.";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
+//        int entryPoint = challengeService.cinfoinfo(challengeId).getEntryPoint();
+//        User user = userService.userinfo(userId);
+//        int point = user.getPoint();
+//        if(point < entryPoint) {
+//        	result.data = "fail";
+//            result.message = "포인트가 부족합니다.";
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        }
+//        user.setPoint(point-entryPoint);
+//        if(!userService.userupdate(user)) {
+//        	result.data = "fail";
+//            result.message = "참여 포인트 삭감에 실패했습니다.";
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        }
         
         Cmember cmObj = new Cmember();
         cmObj.setChallengeId(challengeId);

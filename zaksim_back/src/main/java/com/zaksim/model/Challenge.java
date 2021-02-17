@@ -20,29 +20,13 @@ public class Challenge {
 	private Date startDate;
 	private Date endDate;
 	private String hashtag;
+	private String imgPath;
 	
 	public Challenge() {}
-	
-	public Challenge(ChallengeInsertInfo challengeInsertInfo) {
-		super();
-		this.title = challengeInsertInfo.getTitle();
-		this.mission = challengeInsertInfo.getMission();
-		this.summary = challengeInsertInfo.getSummary();
-		this.managerId = challengeInsertInfo.getManagerId();
-		this.managerNickname = challengeInsertInfo.getManagerNickname();
-		this.isPublic = challengeInsertInfo.getIsPublic();
-		this.isLive = challengeInsertInfo.getIsLive();
-		this.categoryId = challengeInsertInfo.getCategoryId();
-		this.maxUser = challengeInsertInfo.getMaxUser();
-		this.nowUser = challengeInsertInfo.getNowUser();
-		this.startDate = challengeInsertInfo.getStartDate();
-		this.endDate = challengeInsertInfo.getEndDate();
-		this.hashtag = challengeInsertInfo.getHashtag();
-	}
 
 	public Challenge(int challengeId, String title, String mission, String summary, int managerId,
 			String managerNickname, int isPublic, int isLive, int categoryId, int maxUser, int nowUser, Date startDate,
-			Date endDate, String hashtag) {
+			Date endDate, String hashtag, String imgPath) {
 		super();
 		this.challengeId = challengeId;
 		this.title = title;
@@ -58,6 +42,25 @@ public class Challenge {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.hashtag = hashtag;
+		this.imgPath = imgPath;
+	}
+	
+	public Challenge(ChallengeInsertInfo challengeInsertInfo) {
+		this.challengeId = challengeInsertInfo.getChallengeId();
+		this.title = challengeInsertInfo.getTitle();
+		this.mission = challengeInsertInfo.getMission();
+		this.summary = challengeInsertInfo.getSummary();
+		this.managerId = challengeInsertInfo.getManagerId();
+		this.managerNickname = challengeInsertInfo.getManagerNickname();
+		this.isPublic = challengeInsertInfo.getIsPublic();
+		this.isLive = challengeInsertInfo.getIsLive();
+		this.categoryId = challengeInsertInfo.getCategoryId();
+		this.maxUser = challengeInsertInfo.getMaxUser();
+		this.nowUser = challengeInsertInfo.getNowUser();
+		this.startDate = challengeInsertInfo.getStartDate();
+		this.endDate = challengeInsertInfo.getEndDate();
+		this.hashtag = challengeInsertInfo.getHashtag();
+		this.imgPath = challengeInsertInfo.getImgPath();
 	}
 
 	public int getChallengeId() {
@@ -172,12 +175,22 @@ public class Challenge {
 		this.hashtag = hashtag;
 	}
 
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
 	@Override
 	public String toString() {
 		return "Challenge [challengeId=" + challengeId + ", title=" + title + ", mission=" + mission + ", summary="
 				+ summary + ", managerId=" + managerId + ", managerNickname=" + managerNickname + ", isPublic="
 				+ isPublic + ", isLive=" + isLive + ", categoryId=" + categoryId + ", maxUser=" + maxUser + ", nowUser="
-				+ nowUser + ", startDate=" + startDate + ", endDate=" + endDate + ", hashtag=" + hashtag + "]";
+				+ nowUser + ", startDate=" + startDate + ", endDate=" + endDate + ", hashtag=" + hashtag + ", imgPath="
+				+ imgPath + "]";
 	}
+	
 	
 }

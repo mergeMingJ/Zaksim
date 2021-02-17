@@ -8,7 +8,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		order by c.start_date desc
@@ -18,7 +18,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.manager_id = #{userId}
@@ -28,7 +28,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
@@ -40,7 +40,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
@@ -52,7 +52,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.is_public=1
@@ -72,7 +72,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id=#{challengeId}
@@ -80,17 +80,17 @@
 
 	<insert id="challengeinsert" parameterType="Challenge">
 		insert into challenge(title,mission,summary,manager_id,manager_nickname,
-				is_public,is_live,category_id,max_user,now_user,start_date,end_date,hashtag)
+				is_public,is_live,category_id,max_user,now_user,start_date,end_date,hashtag,img_path)
 		values(#{title},#{mission},#{summary},#{managerId},#{managerNickname},
 				#{isPublic},#{isLive},#{categoryId},#{maxUser},#{nowUser},#{startDate},
-				#{endDate},#{hashtag})
+				#{endDate},#{hashtag},#{imgPath})
 	</insert>
 	
 	<update id="challengeupdate" parameterType="Challenge">
 		update challenge c set
 		c.title=#{title},c.mission=#{mission},c.summary=#{summary},c.is_public=#{isPublic},
 		c.is_live=#{isLive},c.category_id=#{categoryId},c.max_user=#{maxUser},c.now_user=#{nowUser},
-		c.start_date=#{startDate},c.end_date=#{endDate},c.hashtag=#{hashtag}
+		c.start_date=#{startDate},c.end_date=#{endDate},c.hashtag=#{hashtag},c.img_path=#{imgPath}
 		where c.challenge_id=#{challengeId}
 	</update>
 	
