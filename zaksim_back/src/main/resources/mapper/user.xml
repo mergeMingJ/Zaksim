@@ -13,7 +13,8 @@
 	</select>
 	
 	<select id="userinfo" parameterType="int" resultType="User">
-		select u.user_id,u.email,u.nickname,u.desc,u.profileimg_path,u.grade,u.point
+		select u.user_id,u.email,u.nickname,u.desc,u.grade,u.point,
+		u.desc,u.profileimg_path profileimgPath
 		from user u
 		where u.user_id=#{userId}
 	</select>

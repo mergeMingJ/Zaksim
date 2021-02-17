@@ -82,6 +82,18 @@ public class ChallengeServiceImpl implements ChallengeService {
 	}
 	
 	@Override
+	public List<Challenge> challengeKeyword(List<Challenge> list, String keyword) throws Exception{
+		if(keyword == null || keyword.equals("")) return list;
+		List<Challenge> newList = new ArrayList<>();
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			String title = challenge.getTitle();
+			if(title.contains(keyword)) newList.add(challenge);
+		}
+		return newList;
+	}
+	
+	@Override
 	public List<Challenge> challengeUserList(int userId) throws Exception {
 		return challengeMapper.challengeUserList(userId);
 	}

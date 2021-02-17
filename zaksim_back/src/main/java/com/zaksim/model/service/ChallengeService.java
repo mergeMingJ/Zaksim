@@ -14,6 +14,7 @@ public interface ChallengeService {
 	public List<Challenge> challengelistreverse();
 	public List<String> hashtagList(List<Challenge> list) throws Exception;
 	public List<Challenge> challengeHashtag(List<Challenge> list, String hashtag) throws Exception;
+	public List<Challenge> challengeKeyword(List<Challenge> list, String keyword) throws Exception;
 	public List<Challenge> challengeUserList(int userId) throws Exception;
 	public List<Challenge> challengeBest(List<Cmember> clist) throws Exception;
 	public List<Challenge> challengeIng(int userId) throws Exception;

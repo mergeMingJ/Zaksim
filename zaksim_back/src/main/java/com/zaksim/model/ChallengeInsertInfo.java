@@ -21,6 +21,7 @@ public class ChallengeInsertInfo {
 	private Date startDate;
 	private Date endDate;
 	private String hashtag;
+	private String imgPath;
 	
 	// cinfo 부분
 	private String guide;
@@ -35,8 +36,8 @@ public class ChallengeInsertInfo {
 
 	public ChallengeInsertInfo(int challengeId, String title, String mission, String summary, int managerId,
 			String managerNickname, int isPublic, int isLive, int categoryId, int maxUser, int nowUser, Date startDate,
-			Date endDate, String hashtag, String guide, String memberCondition, int entryPoint, String descInfo,
-			String descRec, String descExpert, String descWarn) {
+			Date endDate, String hashtag, String imgPath, String guide, String memberCondition, int entryPoint,
+			String descInfo, String descRec, String descExpert, String descWarn) {
 		super();
 		this.challengeId = challengeId;
 		this.title = title;
@@ -52,6 +53,7 @@ public class ChallengeInsertInfo {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.hashtag = hashtag;
+		this.imgPath = imgPath;
 		this.guide = guide;
 		this.memberCondition = memberCondition;
 		this.entryPoint = entryPoint;
@@ -173,6 +175,14 @@ public class ChallengeInsertInfo {
 		this.hashtag = hashtag;
 	}
 
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
 	public String getGuide() {
 		return guide;
 	}
@@ -235,10 +245,11 @@ public class ChallengeInsertInfo {
 				+ ", summary=" + summary + ", managerId=" + managerId + ", managerNickname=" + managerNickname
 				+ ", isPublic=" + isPublic + ", isLive=" + isLive + ", categoryId=" + categoryId + ", maxUser="
 				+ maxUser + ", nowUser=" + nowUser + ", startDate=" + startDate + ", endDate=" + endDate + ", hashtag="
-				+ hashtag + ", guide=" + guide + ", memberCondition=" + memberCondition + ", entryPoint=" + entryPoint
-				+ ", descInfo=" + descInfo + ", descRec=" + descRec + ", descExpert=" + descExpert + ", descWarn="
-				+ descWarn + "]";
+				+ hashtag + ", imgPath=" + imgPath + ", guide=" + guide + ", memberCondition=" + memberCondition
+				+ ", entryPoint=" + entryPoint + ", descInfo=" + descInfo + ", descRec=" + descRec + ", descExpert="
+				+ descExpert + ", descWarn=" + descWarn + "]";
 	}
+
 	
 	
 }
