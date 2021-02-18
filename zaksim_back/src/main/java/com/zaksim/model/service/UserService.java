@@ -14,8 +14,10 @@ public interface UserService {
 	public boolean userdelete(int userId) throws Exception;
 
 	public List<Notice> noticelist(int userId) throws Exception;
+	public int noticenewcount(int userId) throws Exception;
 	public boolean noticeinsert(Notice notice) throws Exception;
-	public boolean noticeupdate(Notice notice) throws Exception;
+	public boolean noticeupdate(int noticeId) throws Exception;
+	public void noticereadall(int userId) throws Exception;
 	public boolean noticedeleteall(int userId) throws Exception;
 	
 	public List<Heart> heartlist(int userId) throws Exception;

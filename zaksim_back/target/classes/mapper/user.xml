@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zaksim.model.mapper.UserMapper">
+
+	<select id="userlogin" parameterType="User" resultType="User">
+		select u.user_id userId,u.email,u.nickname,u.desc,u.profileimg_path profileimgPath,
+				u.grade,u.point,u.regtime
+		from user u
+		where u.email=#{email}
+		and u.password=#{password}
+	</select>
+	
+	<select id="userinfo" parameterType="int" resultType="User">
+		select u.user_id,u.email,u.nickname,u.desc,u.grade,u.point,
+		u.desc,u.profileimg_path profileimgPath
+		from user u
+		where u.user_id=#{userId}
+	</select>
+	
+	<insert id="usersignup" parameterType="User">
+		insert into user(email,password,nickname,grade,point)
+		values(#{email},#{password},#{nickname},1,500)
+	</insert>
+	
+	<update id="userupdate" parameterType="User">
+		update user u set
+		<if test="password != null and password != ''">
+				password=#{password},
+		</if>
+		u.email=#{email},u.nickname=#{nickname},u.desc=#{desc},u.profileimg_path=#{profileimgPath}
+		where u.user_id=#{userId}
+	</update>
+	
+	<delete id="userdelete" parameterType="int">
+		delete from user
+		where user_id=#{userId}
+	</delete>
+	
+	
+	<select id="noticelist" parameterType="int" resultType="Notice">
+		select n.notice_id noticeId,n.from_user_id fromUserId,n.content,n.challenge_id challengeId,
+				n.is_check isCheck,n.user_id userId,n.regtime
+		from notice n
+		where n.user_id=#{userId}
+	</select>
+	
+	<select id="noticenewcount" parameterType="int">
+		select n.notice_id noticeId,n.from_user_id fromUserId,n.content,n.challenge_id challengeId,
+				n.is_check isCheck,n.user_id userId,n.regtime
+		from notice n
+		where n.user_id=#{userId}
+		and n.is_check = 1
+	</select>
+	
+	<insert id="noticeinsert" parameterType="Notice">
+		insert into notice(from_user_id,content,challenge_id,is_check,user_id)
+		values(#{fromUserId},#{content},#{challengeId},0,#{userId})
+	</insert>
+	
+	<update id="noticeupdate" parameterType="int">
+		update notice n set
+		n.is_check=1
+		where n.notice_id=#{noticeId}
+	</update>
+	
+	<delete id="noticedeleteall" parameterType="int">
+		delete from notice
+		where user_id=#{userId}
+	</delete>
+	
+	<select id="heartlist" parameterType="int" resultType="Heart">
+		select h.heart_id heartId,h.user_id userId,h.challenge_id challengeId
+		from heart h
+		where h.user_id=#{userId}
+	</select>
+	
+	<select id="heartinfo" parameterType="Heart" resultType="Heart">
+		select h.heart_id heartId,h.user_id userId,h.challenge_id challengeId
+		from heart h
+		where h.user_id=#{userId}
+		and h.challenge_id=#{challengeId}
+	</select>
+	
+	<insert id="heartinsert" parameterType="Heart">
+		insert into heart(user_id,challenge_id)
+		values(#{userId},#{challengeId})
+	</insert>
+	
+	<delete id="heartdelete" parameterType="Heart">
+		delete from heart
+		where user_id=#{userId}
+		and challenge_id=#{challengeId}
+	</delete>
+	
+</mapper>
