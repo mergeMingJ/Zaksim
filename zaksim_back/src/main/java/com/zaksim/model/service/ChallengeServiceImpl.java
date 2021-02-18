@@ -30,6 +30,107 @@ public class ChallengeServiceImpl implements ChallengeService {
 	public List<Challenge> challengelist() {
 		return challengeMapper.challengelist();
 	}
+	
+	@Override
+	public List<Challenge> challengelistreverse(){
+		List<Challenge> list = challengeMapper.challengelist();
+		List<Challenge> newList = new ArrayList<>();
+		if(list.size() == 0) return list;
+		for(int i = list.size()-1; i >= 0 ; i--) {
+			Challenge challenge = list.get(i);
+			newList.add(challenge);
+		}
+		return newList;
+	}
+	
+	@Override
+	public List<String> hashtagList(List<Challenge> list) throws Exception{
+		List<String> hlist = new ArrayList<>();
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			String hashtag = challenge.getHashtag();
+			if(hashtag == null || hashtag.equals("")) continue;
+			String[] hArray = hashtag.split(",");
+			for(int j = 0; j < hArray.length; j++) {
+				if(!hlist.contains(hArray[j])) {
+					hlist.add(hArray[j]);
+				}
+			}
+		}
+		return hlist;
+	}
+	
+	@Override
+	public List<Challenge> challengeHashtag(List<Challenge> list, String hashtag) throws Exception{
+		if(hashtag == null || hashtag.equals("")) return list;
+		List<Challenge> newList = new ArrayList<>();
+		String[] hArray = hashtag.split(",");
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			String hStr = challenge.getHashtag();
+			if(hStr == null || hStr.equals("")) continue;
+			boolean exist = false;
+			for(int j = 0; j < hArray.length; j++) {
+				if(hStr.contains(hArray[j])) {
+					exist = true;
+					break;
+				}
+			}
+			if(exist) newList.add(challenge);
+		}
+		return newList;
+	}
+	
+	@Override
+	public List<Challenge> challengeKeyword(List<Challenge> list, String keyword) throws Exception{
+		if(keyword == null || keyword.equals("")) return list;
+		List<Challenge> newList = new ArrayList<>();
+		for(int i = 0; i < list.size(); i++) {
+			Challenge challenge = list.get(i);
+			String title = challenge.getTitle();
+			if(title.contains(keyword)) newList.add(challenge);
+		}
+		return newList;
+	}
+	
+	@Override
+	public List<Challenge> challengeUserList(int userId) throws Exception {
+		return challengeMapper.challengeUserList(userId);
+	}
+	
+	@Override
+	public List<Challenge> challengeBest(List<Cmember> clist) throws Exception{
+		List<Challenge> list = new ArrayList<>();
+        
+        for(int i = 0; i < clist.size(); i++) {
+        	Cmember c = clist.get(i);
+        	Challenge challenge = challengeinfo(c.getChallengeId());
+        	challenge.setNowUser(c.getProgress());
+        	list.add(challenge);
+        	if(list.size() >= 4) break;
+        }
+        
+        return list;
+	}
+	
+	@Override
+	public List<Challenge> challengeRecommend(List<Cmember> clist, int userId) throws Exception{
+		List<Challenge> list = new ArrayList<>();
+        
+        for(int i = 0; i < clist.size(); i++) {
+        	Cmember c = clist.get(i);
+        	int challengeId = c.getChallengeId();
+        	Cmember cmember = new Cmember();
+        	cmember.setChallengeId(challengeId);
+        	cmember.setUserId(userId);
+        	if(cmemberinfo(cmember) == null) { // 이미 참여했으면 제외
+        		Challenge challenge = challengeinfo(challengeId);
+        		list.add(challenge);
+        	}
+        }
+        
+        return list;
+	}
 
 	@Override
 	public List<Challenge> challengeIng(int userId) throws Exception {
@@ -116,6 +217,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	}
 	
 	@Override
+	public List<Cmember> cmemberOrder(){
+		return challengeMapper.cmemberOrder();
+	}
+	
+	@Override
 	public Cmember cmemberinfo(Cmember cmember) throws Exception {
 		return challengeMapper.cmemberinfo(cmember);
 	}
@@ -187,10 +293,14 @@ public class ChallengeServiceImpl implements ChallengeService {
     	return chObj;
 	}
 	
+	@Override
+	public List<Challenge> categoryUserList(int userId) throws Exception {
+		return challengeMapper.categoryUserList(userId);
+	}
+	
 	private int dateDiff(Date date1, Date date2) {
 		long deltime = date2.getTime() - date1.getTime();
 		long deldate = deltime / (24 * 60 * 60 * 1000);
-		return (int)deldate;
+		return (int)(deldate + 1);
 	}
-
 }

@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/file")
 public class FileController {
 
-    private static String UPLOADED_FOLDER = "/home/ubuntu/apps/zaksim_back/src/main/resources/images/";
+    private static String UPLOADED_FOLDER = "/home/ubuntu/apps/build/Image/";
 	@PostMapping("/upload")
     public String file(@RequestParam("file") MultipartFile file){
  
@@ -40,7 +40,7 @@ public class FileController {
         try{
             byte[] fileSize = file.getBytes();
             file.transferTo(path);
-            return UPLOADED_FOLDER+file.getOriginalFilename();
+            return "/Image/"+file.getOriginalFilename();
         }catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -22,11 +22,34 @@ public class ChallengeInfo {
 	private int totalProgress;
 	private int userProgress;
 	private String hashtag;
+	private String imgPath;
 	
 	public ChallengeInfo() {}
 
-	public ChallengeInfo(Challenge challenge) {
+	public ChallengeInfo(int challengeId, String title, String mission, String summary, int managerId,
+			String managerNickname, int isPublic, int isLive, int categoryId, int maxUser, int nowUser, Date startDate,
+			Date endDate, int totalProgress, int userProgress, String hashtag, String imgPath) {
 		super();
+		this.challengeId = challengeId;
+		this.title = title;
+		this.mission = mission;
+		this.summary = summary;
+		this.managerId = managerId;
+		this.managerNickname = managerNickname;
+		this.isPublic = isPublic;
+		this.isLive = isLive;
+		this.categoryId = categoryId;
+		this.maxUser = maxUser;
+		this.nowUser = nowUser;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.totalProgress = totalProgress;
+		this.userProgress = userProgress;
+		this.hashtag = hashtag;
+		this.imgPath = imgPath;
+	}
+	
+	public ChallengeInfo(Challenge challenge) {
 		this.challengeId = challenge.getChallengeId();
 		this.title = challenge.getTitle();
 		this.mission = challenge.getMission();
@@ -43,6 +66,7 @@ public class ChallengeInfo {
 		this.totalProgress = 0;
 		this.userProgress = 0;
 		this.hashtag = challenge.getHashtag();
+		this.imgPath = challenge.getImgPath();
 	}
 
 	public int getChallengeId() {
@@ -173,14 +197,23 @@ public class ChallengeInfo {
 		this.hashtag = hashtag;
 	}
 
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
 	@Override
 	public String toString() {
 		return "ChallengeInfo [challengeId=" + challengeId + ", title=" + title + ", mission=" + mission + ", summary="
 				+ summary + ", managerId=" + managerId + ", managerNickname=" + managerNickname + ", isPublic="
 				+ isPublic + ", isLive=" + isLive + ", categoryId=" + categoryId + ", maxUser=" + maxUser + ", nowUser="
 				+ nowUser + ", startDate=" + startDate + ", endDate=" + endDate + ", totalProgress=" + totalProgress
-				+ ", userProgress=" + userProgress + ", hashtag=" + hashtag + "]";
+				+ ", userProgress=" + userProgress + ", hashtag=" + hashtag + ", imgPath=" + imgPath + "]";
 	}
+
 	
 	
 }

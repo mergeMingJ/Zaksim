@@ -8,17 +8,27 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		order by c.start_date desc
+	</select>
+	
+	<select id="challengeUserList" parameterType="int" resultType="Challenge">
+		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
+				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
+				c.end_date endDate,c.hashtag,c.img_path imgPath
+		from challenge c join user u
+		on c.manager_id = u.user_id
+		where c.manager_id = #{userId}
 	</select>
 	
 	<select id="challengeIngDone" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
@@ -30,7 +40,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id in (select challenge_id from cmember
@@ -42,7 +52,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.is_public=1
@@ -62,7 +72,7 @@
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
 				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
-				c.end_date endDate,c.hashtag
+				c.end_date endDate,c.hashtag,c.img_path imgPath
 		from challenge c join user u
 		on c.manager_id = u.user_id
 		where c.challenge_id=#{challengeId}
@@ -70,17 +80,17 @@
 
 	<insert id="challengeinsert" parameterType="Challenge">
 		insert into challenge(title,mission,summary,manager_id,manager_nickname,
-				is_public,is_live,category_id,max_user,now_user,start_date,end_date,hashtag)
+				is_public,is_live,category_id,max_user,now_user,start_date,end_date,hashtag,img_path)
 		values(#{title},#{mission},#{summary},#{managerId},#{managerNickname},
 				#{isPublic},#{isLive},#{categoryId},#{maxUser},#{nowUser},#{startDate},
-				#{endDate},#{hashtag})
+				#{endDate},#{hashtag},#{imgPath})
 	</insert>
 	
 	<update id="challengeupdate" parameterType="Challenge">
 		update challenge c set
 		c.title=#{title},c.mission=#{mission},c.summary=#{summary},c.is_public=#{isPublic},
 		c.is_live=#{isLive},c.category_id=#{categoryId},c.max_user=#{maxUser},c.now_user=#{nowUser},
-		c.start_date=#{startDate},c.end_date=#{endDate},c.hashtag=#{hashtag}
+		c.start_date=#{startDate},c.end_date=#{endDate},c.hashtag=#{hashtag},c.img_path=#{imgPath}
 		where c.challenge_id=#{challengeId}
 	</update>
 	
@@ -101,13 +111,13 @@
 	<insert id="cinfoinsert" parameterType="Cinfo">
 		insert into cinfo(challenge_id,guide,due_time,member_condition,entry_point,desc_info,desc_rec,
 				desc_expert,desc_warn)
-		values(#{challengeId},#{guide},#{dueTime},#{memberCondition},0,#{descInfo},#{descRec},
+		values(#{challengeId},#{guide},#{dueTime},#{memberCondition},#{entryPoint},#{descInfo},#{descRec},
 				#{descExpert},#{descWarn})
 	</insert>
 	
 	<update id="cinfoupdate" parameterType="Cinfo">
 		update cinfo c set
-		c.guide=#{guide},c.due_time=#{dueTime},c.member_condition=#{memberCondition},c.entry_point=#{entryPoint},
+		c.guide=#{guide},c.due_time=#{dueTime},c.member_condition=#{memberCondition},
 		c.desc_info=#{descInfo},c.desc_rec=#{descRec},c.desc_expert=#{descExpert},c.desc_warn=#{descWarn}
 	</update>
 	
@@ -128,6 +138,13 @@
 		select count(c.cmember_id)
 		from cmember c
 		where c.challenge_id=#{challengeId}
+	</select>
+	
+	<select id="cmemberOrder" resultType="Cmember">
+		select challenge_id challengeId, count(challenge_id) progress
+		from cmember
+		group by challenge_id
+		order by progress desc
 	</select>
 	
 	<select id="cmemberinfo" parameterType="Cmember" resultType="Cmember">
@@ -164,6 +181,15 @@
 	<select id="categorylist" resultType="Category">
 		select c.category_id categoryId,c.category_name categoryName
 		from category c
+	</select>
+	
+	<select id="categoryUserList" parameterType="int" resultType="Challenge">
+		select c.category_id categoryId
+		from challenge c join (select challenge_id
+							from cmember
+							where user_id = #{userId}) a
+		on c.challenge_id = a.challenge_id
+		group by c.category_id
 	</select>
 	
 	<select id="challengecount" parameterType="int" resultType="int">

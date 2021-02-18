@@ -23,6 +23,7 @@ import com.zaksim.model.Post;
 import com.zaksim.model.service.CommunityService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 //http://localhost:8000/swagger-ui.html
 @CrossOrigin(origins = {"*"})
@@ -41,6 +42,30 @@ public class CommunityController {
         
         List<Post> list = communityService.postlist();
         if(list != null) {
+        	result.data = "success";
+            result.message = "게시글 목록을 불러옵니다.";
+            result.object = list;
+        }else {
+        	result.data = "fail";
+			result.message = "게시글이 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/search")
+    @ApiOperation(value = "게시글 검색")
+    public Object postSearch(@ApiParam(required = true) @RequestParam String key,
+    		@ApiParam(required = true) @RequestParam String word) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        if(key == null) key = "제목";
+        else if(!key.equals("제목") && !key.equals("내용") && !key.equals("작성자")) key = "제목";
+        if(word == null) word = "";
+        
+        List<Post> list = communityService.postOption(key,word);
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "게시글 목록을 불러옵니다.";
             result.object = list;

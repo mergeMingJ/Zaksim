@@ -1,5 +1,6 @@
 package com.zaksim.model.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.zaksim.model.Checkfeed;
@@ -7,6 +8,7 @@ import com.zaksim.model.Fcomment;
 
 public interface FeedService {
 	public List<Checkfeed> feedlist(int challengeId) throws Exception;
+	public List<Checkfeed> userfeedlist(int challengeId, int userId) throws Exception;
 	public List<Checkfeed> feedCalander(int userId) throws Exception;
 	public Checkfeed feedinfo(int feedId) throws Exception;
 	public boolean feedinsert(Checkfeed checkfeed) throws Exception;
@@ -19,4 +21,6 @@ public interface FeedService {
 	public boolean fcommentupdate(Fcomment fcomment) throws Exception;
 	public boolean fcommentdelete(int fcommentId) throws Exception;
 	public boolean fcommentdeleteall(int feedId) throws Exception;
+	
+	public boolean sameDate(Date date) throws Exception;
 }

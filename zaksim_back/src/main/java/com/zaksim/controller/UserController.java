@@ -156,7 +156,7 @@ public class UserController {
         final BasicResponse result = new BasicResponse();
         
         List<Notice> list = userService.noticelist(userId);
-        if(list != null) {
+        if(list.size() > 0) {
         	result.data = "success";
             result.message = "알림 목록을 불러옵니다.";
             result.object = list;
@@ -267,8 +267,10 @@ public class UserController {
     public Object heartinsert(@RequestBody(required = true) final Heart heart) throws Exception {
         
         final BasicResponse result = new BasicResponse();
-        
-        if(userService.heartinsert(heart)) {
+        if(userService.heartinfo(heart) != null) {
+        	result.data = "fail";
+			result.message = "이미 찜한 챌린지입니다.";
+        }else if(userService.heartinsert(heart)) {
         	result.data = "success";
             result.message = "찜목록에 추가하는데 성공했습니다.";
         }else {
