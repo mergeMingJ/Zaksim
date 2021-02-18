@@ -46,12 +46,20 @@
 		where n.user_id=#{userId}
 	</select>
 	
+	<select id="noticenewcount" parameterType="int">
+		select n.notice_id noticeId,n.from_user_id fromUserId,n.content,n.challenge_id challengeId,
+				n.is_check isCheck,n.user_id userId,n.regtime
+		from notice n
+		where n.user_id=#{userId}
+		and n.is_check = 1
+	</select>
+	
 	<insert id="noticeinsert" parameterType="Notice">
 		insert into notice(from_user_id,content,challenge_id,is_check,user_id)
 		values(#{fromUserId},#{content},#{challengeId},0,#{userId})
 	</insert>
 	
-	<update id="noticeupdate" parameterType="Notice">
+	<update id="noticeupdate" parameterType="int">
 		update notice n set
 		n.is_check=1
 		where n.notice_id=#{noticeId}

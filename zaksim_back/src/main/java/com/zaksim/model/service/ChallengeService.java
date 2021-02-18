@@ -17,6 +17,7 @@ public interface ChallengeService {
 	public List<Challenge> challengeKeyword(List<Challenge> list, String keyword) throws Exception;
 	public List<Challenge> challengeUserList(int userId) throws Exception;
 	public List<Challenge> challengeBest(List<Cmember> clist) throws Exception;
+	public List<Challenge> challengeBestOrder(List<Cmember> clist) throws Exception;
 	public List<Challenge> challengeRecommend(List<Cmember> clist, int userId) throws Exception;
 	public List<Challenge> challengeIng(int userId) throws Exception;
 	public List<Challenge> challengeDone(int userId) throws Exception;

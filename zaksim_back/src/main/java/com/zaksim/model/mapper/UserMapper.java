@@ -17,8 +17,9 @@ public interface UserMapper {
 	int userdelete(int userId) throws Exception;
 	
 	List<Notice> noticelist(int userId) throws Exception;
+	int noticenewcount(int userId) throws Exception;
 	int noticeinsert(Notice notice) throws Exception;
-	int noticeupdate(Notice notice) throws Exception;
+	int noticeupdate(int noticeId) throws Exception;
 	int noticedeleteall(int userId) throws Exception;
 	
 	List<Heart> heartlist(int userId) throws Exception;

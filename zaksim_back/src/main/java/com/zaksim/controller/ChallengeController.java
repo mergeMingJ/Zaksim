@@ -107,7 +107,7 @@ public class ChallengeController {
         if(sort == null) list = challengeService.challengelist();
         else if(sort.equals("최신순")) list = challengeService.challengelist();
         else if(sort.equals("오래된순")) list = challengeService.challengelistreverse();
-        else if(sort.equals("인기순")) list = challengeService.challengeBest(clist);
+        else if(sort.equals("인기순")) list = challengeService.challengeBestOrder(clist);
         else list = challengeService.challengelist();
         
         List<Challenge> hlist = challengeService.challengeHashtag(list, hashtag);
@@ -272,6 +272,28 @@ public class ChallengeController {
         
         List<Cmember> clist = challengeService.cmemberOrder();
         List<Challenge> list = challengeService.challengeBest(clist);
+        List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
+        
+        if(list.size() > 0) {
+        	result.data = "success";
+            result.message = "베스트 챌린지 목록을 불러옵니다.";
+            result.object = newList;
+        }else {
+        	result.data = "fail";
+			result.message = "베스트 챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+	@GetMapping("/main/bestOrder")
+    @ApiOperation(value = "카테고리 정렬 베스트 챌린지 현황")
+    public Object challengebestorder() throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Cmember> clist = challengeService.cmemberOrder();
+        List<Challenge> list = challengeService.challengeBestOrder(clist);
         List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
         
         if(list.size() > 0) {
