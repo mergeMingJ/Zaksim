@@ -82,8 +82,8 @@
 	
 	<delete id="heartdelete" parameterType="Heart">
 		delete from heart
-		where h.user_id=#{userId}
-		and h.challenge_id=#{challengeId}
+		where user_id=#{userId}
+		and challenge_id=#{challengeId}
 	</delete>
 	
 </mapper>

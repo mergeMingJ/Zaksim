@@ -267,8 +267,10 @@ public class UserController {
     public Object heartinsert(@RequestBody(required = true) final Heart heart) throws Exception {
         
         final BasicResponse result = new BasicResponse();
-        
-        if(userService.heartinsert(heart)) {
+        if(userService.heartinfo(heart) != null) {
+        	result.data = "fail";
+			result.message = "이미 찜한 챌린지입니다.";
+        }else if(userService.heartinsert(heart)) {
         	result.data = "success";
             result.message = "찜목록에 추가하는데 성공했습니다.";
         }else {

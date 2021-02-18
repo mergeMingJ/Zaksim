@@ -112,6 +112,25 @@ public class ChallengeServiceImpl implements ChallengeService {
         
         return list;
 	}
+	
+	@Override
+	public List<Challenge> challengeRecommend(List<Cmember> clist, int userId) throws Exception{
+		List<Challenge> list = new ArrayList<>();
+        
+        for(int i = 0; i < clist.size(); i++) {
+        	Cmember c = clist.get(i);
+        	int challengeId = c.getChallengeId();
+        	Cmember cmember = new Cmember();
+        	cmember.setChallengeId(challengeId);
+        	cmember.setUserId(userId);
+        	if(cmemberinfo(cmember) == null) { // 이미 참여했으면 제외
+        		Challenge challenge = challengeinfo(challengeId);
+        		list.add(challenge);
+        	}
+        }
+        
+        return list;
+	}
 
 	@Override
 	public List<Challenge> challengeIng(int userId) throws Exception {
