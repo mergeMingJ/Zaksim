@@ -112,6 +112,21 @@ public class ChallengeServiceImpl implements ChallengeService {
         
         return list;
 	}
+
+	@Override
+	public List<Challenge> challengeBestOrder(List<Cmember> clist) throws Exception{
+		List<Challenge> list = new ArrayList<>();
+        
+        for(int i = 0; i < clist.size(); i++) {
+        	Cmember c = clist.get(i);
+        	Challenge challenge = challengeinfo(c.getChallengeId());
+        	challenge.setNowUser(c.getProgress());
+        	list.add(challenge);
+        	// if(list.size() >= 4) break;
+        }
+        
+        return list;
+	}
 	
 	@Override
 	public List<Challenge> challengeRecommend(List<Cmember> clist, int userId) throws Exception{
@@ -280,6 +295,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     	
     	int totalProgress = 0; // 현재 진행률
     	if(nowTime.after(chObj.getEndDate())) totalProgress = dateDiff(chObj.getStartDate(),chObj.getEndDate());
+    	else if(nowTime.before(chObj.getStartDate())) totalProgress = 0;
     	else totalProgress = dateDiff(chObj.getStartDate(),nowTime);
     	chObj.setTotalProgress(totalProgress * 100 / maxProgress);
     	

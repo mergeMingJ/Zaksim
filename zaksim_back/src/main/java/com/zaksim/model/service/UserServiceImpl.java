@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
 	public List<Notice> noticelist(int userId) throws Exception {
 		return userMapper.noticelist(userId);
 	}
+	
+	@Override
+	public int noticenewcount(int userId) throws Exception{
+		return userMapper.noticenewcount(userId);
+	}
 
 	@Override
 	public boolean noticeinsert(Notice notice) throws Exception {
@@ -52,8 +57,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean noticeupdate(Notice notice) throws Exception {
-		return userMapper.noticeupdate(notice) == 1;
+	public boolean noticeupdate(int noticeId) throws Exception {
+		return userMapper.noticeupdate(noticeId) == 1;
+	}
+	
+	@Override
+	public void noticereadall(int userId) throws Exception{
+		List<Notice> list = userMapper.noticelist(userId);
+		for(int i = 0; i < list.size(); i++) {
+			Notice notice = list.get(i);
+			int noticeId = notice.getNoticeId();
+			int isCheck = notice.getIsCheck();
+			if(isCheck == 0) {
+				userMapper.noticeupdate(noticeId);
+			}
+		}
 	}
 	
 	@Override

@@ -168,6 +168,20 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 	
+	@GetMapping("/notice/count")
+    @ApiOperation(value = "새로운 알림 개수")
+    public Object noticenewcount(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        int count = userService.noticenewcount(userId);
+        result.data = "success";
+        result.message = "새로운 알림 개수를 불러옵니다.";
+        result.object = count;
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
 	@PostMapping("/notice/insert")
     @ApiOperation(value = "알림 전송")
     public Object noticeinsert(@RequestBody(required = true) final Notice notice) throws Exception {
@@ -185,7 +199,7 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 	
-	@PutMapping("/notice/update")
+	/*@PutMapping("/notice/update")
     @ApiOperation(value = "알림 읽기")
     public Object noticeupdate(@RequestBody(required = true) final Notice notice) throws Exception {
         
@@ -197,6 +211,25 @@ public class UserController {
         }else {
         	result.data = "fail";
 			result.message = "알림을 읽는데 실패했습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }*/
+	
+	@PutMapping("/notice/update")
+    @ApiOperation(value = "알림 모두 읽기")
+    public Object noticeupdate(@RequestParam(required = true) final int userId) throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        userService.noticereadall(userId);
+        int count = userService.noticenewcount(userId);
+        if(count == 0) {
+        	result.data = "success";
+            result.message = "알림을 모두 읽는데 성공했습니다.";
+        }else {
+        	result.data = "fail";
+			result.message = "알림을 모두 읽는데 실패했습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
