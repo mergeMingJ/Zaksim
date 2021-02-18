@@ -1,5 +1,7 @@
 package com.zaksim.model.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,15 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public List<Checkfeed> feedlist(int challengeId) throws Exception {
 		return feedMapper.feedlist(challengeId);
+	}
+	
+	@Override
+	public List<Checkfeed> userfeedlist(int challengeId, int userId) throws Exception{
+		Checkfeed checkfeed = new Checkfeed();
+		checkfeed.setChallengeId(challengeId);
+		checkfeed.setUserId(userId);
+		List<Checkfeed> list = feedMapper.userfeedlist(checkfeed);
+		return list;
 	}
 	
 	@Override
@@ -73,6 +84,18 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public boolean fcommentdeleteall(int feedId) throws Exception {
 		return feedMapper.fcommentdeleteall(feedId) == 1;
+	}
+	
+	@Override
+	public boolean sameDate(Date date) throws Exception{
+		Date nowTime = new Date();
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(date);
+		cal2.setTime(nowTime);
+		boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+		                  cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+		return sameDay;
 	}
 
 }

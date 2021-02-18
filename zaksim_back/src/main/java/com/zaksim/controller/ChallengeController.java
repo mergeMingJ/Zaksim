@@ -92,10 +92,10 @@ public class ChallengeController {
 	
 	@GetMapping("/search")
     @ApiOperation(value = "챌린지 검색")
-    public Object challengeSearch(@ApiParam @RequestParam String title,
-    		@ApiParam @RequestParam String hashtag,
+    public Object challengeSearch(@ApiParam @RequestParam(required = false) String title,
+    		@ApiParam @RequestParam(required = false) String hashtag,
     		@ApiParam(required = true) @RequestParam String sort) throws Exception {
-        
+		
         final BasicResponse result = new BasicResponse();
         
         if(title == null) title = "";
@@ -276,11 +276,11 @@ public class ChallengeController {
         
         if(list.size() > 0) {
         	result.data = "success";
-            result.message = "챌린지 목록을 불러옵니다.";
+            result.message = "베스트 챌린지 목록을 불러옵니다.";
             result.object = newList;
         }else {
         	result.data = "fail";
-			result.message = "챌린지가 없습니다.";
+			result.message = "베스트 챌린지가 없습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -292,46 +292,24 @@ public class ChallengeController {
         
         final BasicResponse result = new BasicResponse();
         
-        // 카테고리에 맞는 챌린지들
-        List<Challenge> ctlist = challengeService.categoryUserList(userId); // 유저가 참여한 챌린지 카테고리들=
-        List<Cmember> clist = challengeService.cmemberOrder(); // 인기별 챌린지
-        List<Challenge> list1 = new ArrayList<>(); // 카테고리 포함 챌린지
-        List<Challenge> list2 = new ArrayList<>(); // 카테고리 미포함 챌린지
-        
-        for(int i = 0; i < clist.size(); i++) {
-        	Cmember c = clist.get(i);
-        	int challengeId = c.getChallengeId();
-        	Cmember cmember = new Cmember();
-        	cmember.setUserId(userId);
-        	cmember.setChallengeId(challengeId);
-        	if(challengeService.cmemberinfo(cmember) != null) continue;
-        	Challenge challenge = challengeService.challengeinfo(c.getChallengeId());
-        	boolean contain = false;
-        	int categoryId = challenge.getCategoryId();
-        	for(int j = 0; j < ctlist.size(); j++) {
-        		if(categoryId == ctlist.get(j).getCategoryId()) {
-        			contain = true;
-        			break;
-        		}
-        	}
-        	challenge.setNowUser(c.getProgress());
-        	if(contain) list1.add(challenge);
-        	else list2.add(challenge);
+        List<Cmember> cmlist = challengeService.cmemberOrder();
+        List<Challenge> list = challengeService.challengeRecommend(cmlist,userId);
+        List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
+        List<ChallengeInfo> finalList = new ArrayList<>();
+        for(int i = 0; i < newList.size(); i++) {
+        	ChallengeInfo challengeInfo = newList.get(i);
+        	int totalProgress = challengeInfo.getTotalProgress();
+        	if(totalProgress >= 100) continue;
+        	finalList.add(challengeInfo);
         }
         
-        if(list1.size() > 0) {
-        	List<ChallengeInfo> newList = challengeService.setNowUser(list1,1);
+        if(list.size() > 0) {
         	result.data = "success";
-            result.message = "챌린지 목록을 불러옵니다.";
-            result.object = newList;
-        }else if(list2.size() > 0) {
-        	List<ChallengeInfo> newList = challengeService.setNowUser(list2,1);
-        	result.data = "success";
-            result.message = "챌린지 목록을 불러옵니다.";
-            result.object = newList;
+            result.message = "추천 챌린지 목록을 불러옵니다.";
+            result.object = finalList;
         }else {
         	result.data = "fail";
-            result.message = "챌린지 목록이 없습니다.";
+            result.message = "추천 챌린지 목록이 없습니다.";
         }
 		
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -627,22 +605,23 @@ public class ChallengeController {
         final BasicResponse result = new BasicResponse();
         
         int challengeId = cmember.getChallengeId();
-        int userId = cmember.getUserId();
         
-//        int entryPoint = challengeService.cinfoinfo(challengeId).getEntryPoint();
-//        User user = userService.userinfo(userId);
-//        int point = user.getPoint();
-//        if(point < entryPoint) {
-//        	result.data = "fail";
-//            result.message = "포인트가 부족합니다.";
-//            return new ResponseEntity<>(result, HttpStatus.OK);
-//        }
-//        user.setPoint(point-entryPoint);
-//        if(!userService.userupdate(user)) {
-//        	result.data = "fail";
-//            result.message = "참여 포인트 삭감에 실패했습니다.";
-//            return new ResponseEntity<>(result, HttpStatus.OK);
-//        }
+        Challenge challenge = challengeService.challengeinfo(challengeId);
+        ChallengeInfo cObj = challengeService.challengeconvert(challenge, 1);
+        if(cObj.getNowUser() >= cObj.getMaxUser()) {
+        	result.data = "fail";
+            result.message = "이미 꽉 찼습니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        Date nowTime = new Date();
+        Date startDate = cObj.getStartDate();
+        if(nowTime.after(startDate)) {
+        	result.data = "fail";
+            result.message = "이미 모집기간이 지났습니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        
+        int userId = cmember.getUserId();
         
         Cmember cmObj = new Cmember();
         cmObj.setChallengeId(challengeId);

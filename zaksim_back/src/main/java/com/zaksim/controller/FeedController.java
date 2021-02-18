@@ -1,5 +1,6 @@
 package com.zaksim.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zaksim.model.BasicResponse;
+import com.zaksim.model.Challenge;
+import com.zaksim.model.ChallengeInfo;
 import com.zaksim.model.Checkfeed;
 import com.zaksim.model.Fcomment;
+import com.zaksim.model.service.ChallengeService;
 import com.zaksim.model.service.FeedService;
 
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +36,8 @@ public class FeedController {
 
 	@Autowired
 	private FeedService feedService;
+	@Autowired
+	private ChallengeService challengeService;
 	
 	@GetMapping("")
     @ApiOperation(value = "인증글 목록")
@@ -95,6 +101,37 @@ public class FeedController {
     public Object feedinsert(@RequestBody(required = true) final Checkfeed checkfeed) throws Exception {
         
         final BasicResponse result = new BasicResponse();
+        
+        int challengeId = checkfeed.getChallengeId();
+        int userId = checkfeed.getUserId();
+        if(challengeService.challengeinfo(challengeId) == null) {
+        	result.data = "fail";
+            result.message = "존재하지 않는 챌린지입니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        Challenge challenge = challengeService.challengeinfo(challengeId);
+        ChallengeInfo cObj = challengeService.challengeconvert(challenge, 1);
+        Date nowTime = new Date();
+        Date startDate = cObj.getStartDate();
+        Date endDate = cObj.getEndDate();
+        if(nowTime.before(startDate)) {
+        	result.data = "fail";
+            result.message = "아직 인증기간이 아닙니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else if(nowTime.after(endDate)) {
+        	result.data = "fail";
+            result.message = "인증기간이 이미 지났습니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        List<Checkfeed> list = feedService.userfeedlist(challengeId, userId);
+        for(int i = 0; i < list.size(); i++) {
+        	Date regtime = list.get(i).getRegtime();
+        	if(feedService.sameDate(regtime)) {
+        		result.data = "fail";
+    			result.message = "오늘은 이미 인증했습니다.";
+    			return new ResponseEntity<>(result, HttpStatus.OK);
+        	}
+        }
         
         if(feedService.feedinsert(checkfeed)) {
         	result.data = "success";
