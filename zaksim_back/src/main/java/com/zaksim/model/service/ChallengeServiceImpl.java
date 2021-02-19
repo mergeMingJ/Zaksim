@@ -32,6 +32,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	}
 	
 	@Override
+	public List<Challenge> challengenewlist(){
+		return challengeMapper.challengenewlist();
+	}
+	
+	@Override
 	public List<Challenge> challengelistreverse(){
 		List<Challenge> list = challengeMapper.challengelist();
 		List<Challenge> newList = new ArrayList<>();
