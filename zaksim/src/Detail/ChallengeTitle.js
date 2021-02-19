@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,12 +6,87 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import water from '../Image/water.jpg';
-import StarOutlineIcon from '@material-ui/icons/StarOutline';
-import { IconButton } from 'material-ui';
+import http from '../common/axios/index';
+
+export default function ChallengeTitle({ challengeId }) {
+  const classes = useStyles();
+
+  const [title, setTitle] = React.useState('');
+  const [nowUser, setNowUser] = React.useState('');
+  const [userProgress, setUserProgress] = React.useState('');
+  const [imgPath, setImgPath] = React.useState('');
+
+
+  let params = {
+    challengeId: Number(challengeId)
+  };
+
+  useEffect(() => {
+    http.get('/challenge/info', { params }).then((res) => {
+      if (res.data.data === 'success') {
+        setTitle(res.data.object.title);
+        setNowUser(res.data.object.nowUser);
+        setUserProgress(res.data.object.userProgress);
+        setImgPath(res.data.object.imgPath)
+      }
+    });
+  }, [])
+
+
+
+  return (
+    <React.Fragment>
+      <CssBaseline />
+
+      <main>
+        {
+          imgPath != null ?
+            <div className={classes.titleContent}
+              style={{ backgroundImage: `url(${imgPath})`, }}>
+
+              <Container maxWidth="md">
+                <Typography
+                  className={classes.darken}
+                  variant="h4"
+                  align="center"
+                  style={{ fontFamily: 'KOTRA_BOLD-Bold', color: 'white' }}
+                >
+                  {title}
+                </Typography>
+                <Grid container spacing={0} justify="center">
+                  <Typography className={classes.statusBox} style={{ fontFamily: 'KOTRA_GOTHIC' }}>
+                    참여 {nowUser}명&nbsp;&nbsp;|&nbsp;&nbsp;진행률 {userProgress}%
+              </Typography>
+                </Grid>
+              </Container>
+            </div> :
+            <div className={classes.titleContent}
+              style={{ backgroundColor: '#fc9e4f' }}>
+              <Container maxWidth="md">
+                <Typography
+                  className={classes.darken}
+                  variant="h4"
+                  align="center"
+                  style={{ fontFamily: 'KOTRA_BOLD-Bold', color: 'white' }}
+                >
+                  {title}
+                </Typography>
+                <Grid container spacing={0} justify="center">
+                  <Typography className={classes.statusBox} style={{ fontFamily: 'KOTRA_GOTHIC' }}>
+                    참여 {nowUser}명&nbsp;&nbsp;|&nbsp;&nbsp;진행률 {userProgress}%
+              </Typography>
+                </Grid>
+              </Container>
+            </div>
+        }
+      </main>
+    </React.Fragment>
+  );
+}
 
 const useStyles = makeStyles((theme) => ({
   darken: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     padding: '54px 0px 80px',
     position: 'absolute',
     width: '100%',
@@ -23,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
   titleContent: {
     padding: theme.spacing(8, 0, 5),
-    backgroundImage: `url(${water})`,
+    // backgroundImage: `url(${water})`,
     position: 'relative',
   },
   statusBox: {
@@ -37,32 +112,3 @@ const useStyles = makeStyles((theme) => ({
     opacity: '0.7',
   },
 }));
-
-export default function ChallengeTitle() {
-  const classes = useStyles();
-
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <main>
-        <div className={classes.titleContent}>
-          <Container maxWidth="md">
-            <Typography
-              className={classes.darken}
-              variant="h4"
-              align="center"
-              style={{ fontWeight: 'bold', color: 'white' }}
-            >
-              물 마시는 습관 기르기. 매일 500mL 인증!
-            </Typography>
-            <Grid container spacing={0} justify="center">
-              <Typography className={classes.statusBox}>
-                참여 32명&nbsp;&nbsp;|&nbsp;&nbsp;인증률 61%
-              </Typography>
-            </Grid>
-          </Container>
-        </div>
-      </main>
-    </React.Fragment>
-  );
-}

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
-import FixedItem from '../TotalPage/FixedItem';
-import PostList from '../Community/PostList'
+import PostList from '../Community/PostList';
+import Header from '../Fixed/Header';
+import Padding from '../Fixed/Padding';
 
 const Community = () => {
   return (
     <div>
-      <FixedItem></FixedItem>
+      <Header></Header>
+      <Padding></Padding>
       <PostList></PostList>
     </div>
   );

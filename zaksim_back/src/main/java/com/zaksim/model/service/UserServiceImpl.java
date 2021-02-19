@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zaksim.model.Heart;
 import com.zaksim.model.Notice;
 import com.zaksim.model.User;
 import com.zaksim.model.mapper.UserMapper;
@@ -44,6 +45,11 @@ public class UserServiceImpl implements UserService {
 	public List<Notice> noticelist(int userId) throws Exception {
 		return userMapper.noticelist(userId);
 	}
+	
+	@Override
+	public int noticenewcount(int userId) throws Exception{
+		return userMapper.noticenewcount(userId);
+	}
 
 	@Override
 	public boolean noticeinsert(Notice notice) throws Exception {
@@ -51,8 +57,46 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean noticeupdate(Notice notice) throws Exception {
-		return userMapper.noticeupdate(notice) == 1;
+	public boolean noticeupdate(int noticeId) throws Exception {
+		return userMapper.noticeupdate(noticeId) == 1;
+	}
+	
+	@Override
+	public void noticereadall(int userId) throws Exception{
+		List<Notice> list = userMapper.noticelist(userId);
+		for(int i = 0; i < list.size(); i++) {
+			Notice notice = list.get(i);
+			int noticeId = notice.getNoticeId();
+			int isCheck = notice.getIsCheck();
+			if(isCheck == 0) {
+				userMapper.noticeupdate(noticeId);
+			}
+		}
+	}
+	
+	@Override
+	public boolean noticedeleteall(int userId) throws Exception {
+		return userMapper.noticedeleteall(userId) == 1;
+	}
+
+	@Override
+	public List<Heart> heartlist(int userId) throws Exception {
+		return userMapper.heartlist(userId);
+	}
+
+	@Override
+	public Heart heartinfo(Heart heart) throws Exception {
+		return userMapper.heartinfo(heart);
+	}
+
+	@Override
+	public boolean heartinsert(Heart heart) throws Exception {
+		return userMapper.heartinsert(heart) == 1;
+	}
+
+	@Override
+	public boolean heartdelete(Heart heart) throws Exception {
+		return userMapper.heartdelete(heart) == 1;
 	}
 
 }

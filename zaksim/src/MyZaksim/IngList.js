@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,6 +13,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Progress } from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
+import moment from 'moment';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ModalFeedForm from '../Detail/ModalFeedForm';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -37,103 +43,122 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3];
-
-export default function IngList() {
+export default function IngList(props) {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [showState, setShowState] = React.useState(false);
+
+
+  const getDetail = (challenge) => {
+    history.push(`/Detail/${challenge.challengeId}`);
+  };
+  const changeShow = () => {
+    setShowState(!showState)
+  }
+  // 인증 모달 열었다. 닫았다.
+  const [modalFeedFormOpen, setModalFeedFormOpen] = React.useState(false);
+  const handleClickModalFeedFormOpen = () => {
+    setModalFeedFormOpen(true);
+  };
+  const handleClickModalFeedFormClose = () => {
+    setModalFeedFormOpen(false);
+  };
 
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
-        {/* Hero unit */}
-        {/* <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Zaksim 365 Days
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Welcome to Zaksim. Zaksim with us!!
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    What is Jaksim
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Way to Jaksim
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
-          </Container>
-        </div> */}
-        {/* End hero unit */}
         <Container className={classes.cardGrid} maxWidth="md">
           <Typography
             variant="h5"
             align="left"
             color="textPrimary"
-            style={{ fontWeight: 'bold' }}
-            gutterBottom
+            style={{ fontFamily: 'KOTRA_BOLD-Bold' }} gutterBottom
           >
             {' '}
-            Merge 님의 진심
+            {window.localStorage.getItem('nickname')} 님의 진심
+            <IconButton onClick={() => { changeShow() }} color="inherit">
+              <ArrowDownwardIcon style={{ fontSize: 'large' }} onClick={() => { changeShow() }} />
+            </IconButton>
           </Typography>
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    {/* 챌린지 이름 */}
-                    <Typography gutterBottom variant="h6" component="h2" align="center">
-                      하루에 물 1리터 마시기
+          {
+            showState === true ?
+
+              <Grid container spacing={4}>
+                {props.ingchallenges.map((challenge) => (
+
+                  <Grid item key={challenge.challengeId} xs={12} sm={6} md={4}>
+                    <ModalFeedForm challengeId={challenge.challengeId} open={modalFeedFormOpen} onClose={handleClickModalFeedFormClose} />
+
+                    <Card className={classes.card}>
+                      {
+                        challenge.imgPath != null ?
+                          <CardMedia
+                            className={classes.cardMedia}
+                            image={challenge.imgPath}
+                            title="Image title"
+                          /> :
+                          <CardMedia
+                            className={classes.cardMedia}
+                            image={"/Image/defaultChallenge.jpeg"}
+                            title="Image title"
+                          />
+                      }
+                      <CardContent className={classes.cardContent}>
+                        {/* 챌린지 이름 */}
+                        <Typography gutterBottom variant="h6" component="h2" align="center" style={{ fontFamily: 'KOTRA_BOLD-Bold' }}>
+                          {challenge.title}
+                        </Typography>
+                        {/* 챌린지 기간 */}
+                        <Typography gutterBottom align="center">
+                          {moment(challenge.startDate).format('YY/MM/DD')} ~{' '}
+                          {moment(challenge.endDate).format('YY/MM/DD')} (
+                      {moment(challenge.endDate).diff(moment(challenge.startDate), 'days')}
+                      일)
                     </Typography>
-                    {/* 챌린지 기간 */}
-                    <Typography gutterBottom align="center">
-                      21/01/26 ~ 21/02/25 (N일)
-                    </Typography>
-                    {/* 챌린지 전체 기간 */}
-                    <Progress percent={77} />
-                    {/* 챌린지 인증률 */}
-                    <Progress percent={56} />
-                  </CardContent>
-                  <CardActions>
-                    <Grid container spacing={2} justify="center">
-                      <Grid item>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          color="primary"
-                          className={classes.margin}
-                        >
-                          상세보기
+                        {/* 챌린지 전체 기간 */}
+                        <Progress percent={challenge.totalProgress} />
+                        {/* 챌린지 인증률 */}
+                        <Progress percent={challenge.userProgress} />
+                      </CardContent>
+                      <CardActions>
+                        <Grid container spacing={2} justify="center">
+                          <Grid item>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              color="primary"
+                              className={classes.margin}
+                              onClick={() => {
+                                getDetail(challenge);
+                              }}
+                            >
+                              상세보기
                         </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          color="secondary"
-                          className={classes.margin}
-                        >
-                          인증하기
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              color="secondary"
+                              className={classes.margin}
+                              modalopen={modalFeedFormOpen}
+                              onClick={() => {
+                                handleClickModalFeedFormOpen();
+                              }}
+                            >
+                              인증하기
                         </Button>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                          </Grid>
+                        </Grid>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid> :
+              <div></div>
+          }
         </Container>
       </main>
     </React.Fragment>

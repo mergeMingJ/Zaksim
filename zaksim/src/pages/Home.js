@@ -1,23 +1,17 @@
 import React from 'react';
-import IntroLogout from '../MainPage/IntroLogout';
-import Category from '../MainPage/Category';
-import RecommandCard from '../MainPage/RecommandCard';
-import Best from '../MainPage/Best';
-import { Box, Container, Typography } from '@material-ui/core';
-import FixedItem from '../TotalPage/FixedItem';
 import Footer from '../Fixed/Footer';
+import Header from '../Fixed/Header';
+import FullScreen from '../MainPage/FullScreen';
 
-const Home = () => {
+export default function Home() {
+  // const [isLogin, setIsLogin] = React.useState(0);
+
+  const isLogin = window.localStorage.getItem('isLogin');
   return (
     <div>
-      <FixedItem></FixedItem>
-      <IntroLogout></IntroLogout>
-      <Category></Category>
-      <Best></Best>
-      <RecommandCard></RecommandCard>
-      <Footer></Footer>
+      <Header />
+      <FullScreen />
+      <Footer />
     </div>
   );
-};
-
-export default Home;
+}

@@ -13,6 +13,7 @@ public interface CommunityMapper {
 	Post postinfo(int postId) throws Exception;
 	int postinsert(Post post) throws Exception;
 	int postupdate(Post post) throws Exception;
+	int postView(Post post) throws Exception;
 	int postdelete(int postId) throws Exception;
 	
 	List<Comment> commentlist(int postId) throws Exception;

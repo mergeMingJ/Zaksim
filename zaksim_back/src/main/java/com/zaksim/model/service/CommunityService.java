@@ -7,9 +7,11 @@ import com.zaksim.model.Post;
 
 public interface CommunityService {
 	public List<Post> postlist();
+	public List<Post> postOption(String key, String word) throws Exception;
 	public Post postinfo(int postId) throws Exception;
 	public boolean postinsert(Post post) throws Exception;
 	public boolean postupdate(Post post) throws Exception;
+	public boolean postView(Post post) throws Exception;
 	public boolean postdelete(int postId) throws Exception;
 
 	public List<Comment> commentlist(int postId) throws Exception;

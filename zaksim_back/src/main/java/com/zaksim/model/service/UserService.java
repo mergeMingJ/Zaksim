@@ -2,6 +2,7 @@ package com.zaksim.model.service;
 
 import java.util.List;
 
+import com.zaksim.model.Heart;
 import com.zaksim.model.Notice;
 import com.zaksim.model.User;
 
@@ -13,6 +14,14 @@ public interface UserService {
 	public boolean userdelete(int userId) throws Exception;
 
 	public List<Notice> noticelist(int userId) throws Exception;
+	public int noticenewcount(int userId) throws Exception;
 	public boolean noticeinsert(Notice notice) throws Exception;
-	public boolean noticeupdate(Notice notice) throws Exception;
+	public boolean noticeupdate(int noticeId) throws Exception;
+	public void noticereadall(int userId) throws Exception;
+	public boolean noticedeleteall(int userId) throws Exception;
+	
+	public List<Heart> heartlist(int userId) throws Exception;
+	public Heart heartinfo(Heart heart) throws Exception;
+	public boolean heartinsert(Heart heart) throws Exception;
+	public boolean heartdelete(Heart heart) throws Exception;
 }

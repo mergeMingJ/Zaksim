@@ -13,10 +13,12 @@ public class Post {
 	private int categoryId;
 	private String filePath;
 	private Date regtime;
+	private int view;
 	
 	public Post() {}
 
-	public Post(int postId, int userId, String title, String content, int categoryId, String filePath, Date regtime) {
+	public Post(int postId, int userId, String title, String content, int categoryId, String filePath, Date regtime,
+			int view) {
 		super();
 		this.postId = postId;
 		this.userId = userId;
@@ -25,6 +27,7 @@ public class Post {
 		this.categoryId = categoryId;
 		this.filePath = filePath;
 		this.regtime = regtime;
+		this.view = view;
 	}
 
 	public int getPostId() {
@@ -83,10 +86,21 @@ public class Post {
 		this.regtime = regtime;
 	}
 
+	public int getView() {
+		return view;
+	}
+
+	public void setView(int view) {
+		this.view = view;
+	}
+
 	@Override
 	public String toString() {
 		return "Post [postId=" + postId + ", userId=" + userId + ", title=" + title + ", content=" + content
-				+ ", categoryId=" + categoryId + ", filePath=" + filePath + ", regtime=" + regtime + "]";
+				+ ", categoryId=" + categoryId + ", filePath=" + filePath + ", regtime=" + regtime + ", view=" + view
+				+ "]";
 	}
+
+	
 	
 }

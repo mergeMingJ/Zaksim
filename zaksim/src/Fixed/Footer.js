@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#888',
     display: 'flex',
     flexDirection: 'column',
+    bottom: '0',
   },
 }));
 

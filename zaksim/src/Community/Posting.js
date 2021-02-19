@@ -1,20 +1,30 @@
-import React, {useState} from 'react';
-import { Button, Container, Grid, Typography, makeStyles, Link, Box, TextField } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Button,
+  Container,
+  Grid,
+  Typography,
+  makeStyles,
+  Link,
+  Box,
+  TextField,
+} from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import FixedItem from '../TotalPage/FixedItem';
-import axios from 'axios'
+import axios from 'axios';
+import Header from '../Fixed/Header';
+import Footer from '../Fixed/Footer';
+import http from '../common/axios/index';
+import Padding from '../Fixed/Padding';
 
 const useStyles = makeStyles({
-  titleArea: {
-    height: '50px',
-  },
   formControl: {
     height: '50px',
     minWidth: '120px',
+    display: 'inline-block',
   },
   select: {
     height: '50px',
@@ -23,11 +33,12 @@ const useStyles = makeStyles({
     borderRadius: '5px',
   },
   title: {
-    width: '680px',
+    width: '630px',
     fontSize: '18px',
     padding: '12px 0',
     border: '1px solid grey',
-    borderRadius: '5px'
+    borderRadius: '5px',
+    display: 'inline-block',
   },
   content: {
     fontSize: '14px',
@@ -36,35 +47,45 @@ const useStyles = makeStyles({
     height: '600px',
     width: '800px',
     border: '1px solid grey',
+    display: 'block',
   },
   submit: {
     color: 'white',
-    backgroundColor: '#FF7761',
+    backgroundColor: '#fc9e4f',
     border: '1px',
     borderRadius: '5px',
-  }
+    display: 'block',
+    margin: '10px',
+    fontFamily: 'KOTRA_GOTHIC'
+  },
+  cancel: {
+    color: 'white',
+    backgroundColor: '#edd382',
+    border: '1px',
+    borderRadius: '5px',
+    display: 'block',
+    margin: '10px',
+  },
 });
-
 
 function Posting() {
   const classes = useStyles();
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
+  const [userId, setUserId] = useState(window.localStorage.getItem('userId'));
   const postSave = async () => {
-    const post = await axios.post('https://i4b108.p.ssafy.io/community', {
-      "categoryId": category,
-      "content": content,
-      "filePath": "string",
-      "postId": 0,
-      "regtime": "2021-02-04T19:27:31.681Z",
-      "title": title,
-      "userId": 0
+    const post = await http.post('/community/insert', {
+      categoryId: category,
+      content: content,
+      filePath: 'string',
+      postId: 0,
+      regtime: '2021-02-04T19:27:31.681Z',
+      title: title,
+      userId: userId,
     });
-    console.log(post);
-    return window.location.href = '/community'
-  }
+    return (window.location.href = '/community');
+  };
 
   const onCategoryHandler = (e) => {
     setCategory(e.target.value);
@@ -78,26 +99,52 @@ function Posting() {
 
   return (
     <div>
-      <FixedItem></FixedItem>
-      <Container>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel>카테고리</InputLabel>
-          <Select
-            className={classes.select}
-            value={category}
-            onChange={onCategoryHandler}
-            label="카테고리"
+      <Header></Header>
+      <Padding></Padding>
+      <Container style={{ maxWidth: '800px', marginTop: '30px' }}>
+        <Grid container justify="center">
+          <div style={{ display: 'block' }}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>카테고리</InputLabel>
+              <Select
+                className={classes.select}
+                value={category}
+                onChange={onCategoryHandler}
+                label="카테고리"
+              >
+                <MenuItem value={0}>운동</MenuItem>
+                <MenuItem value={1}>공부</MenuItem>
+                <MenuItem value={2}>취미</MenuItem>
+                <MenuItem value={3}>기타</MenuItem>
+              </Select>
+            </FormControl>
+            <input
+              className={classes.title}
+              type="text"
+              placeholder="제목을 입력하세요."
+              onChange={onTitleHandler}
+            ></input>
+          </div>
+          <textarea
+            className={classes.content}
+            type="text"
+            placeholder="내용을 입력하세요."
+            onChange={onContentHandler}
+          ></textarea>
+          <Button className={classes.submit} onClick={postSave} style={{ fontFamily: 'KOTRA_GOTHIC' }}>
+            글쓰기
+          </Button>
+          <Button
+            className={classes.cancel}
+            onClick={() => {
+              return (window.location.href = '/community');
+            }}
           >
-            <MenuItem value={0}>운동</MenuItem>
-            <MenuItem value={1}>공부</MenuItem>
-            <MenuItem value={2}>취미</MenuItem>
-            <MenuItem value={3}>기타</MenuItem>
-          </Select>
-        </FormControl>
-        <input className={classes.title} type="text" placeholder="제목을 입력하세요." onChange={onTitleHandler}></input>
-        <p><textarea className={classes.content} type="text" placeholder="내용을 입력하세요." onChange={onContentHandler}></textarea></p>
-        <Button className={classes.submit} onClick={postSave}>글쓰기</Button>
+            취소
+          </Button>
+        </Grid>
       </Container>
+      <Footer></Footer>
     </div>
   );
 }

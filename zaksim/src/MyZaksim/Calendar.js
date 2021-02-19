@@ -1,13 +1,24 @@
-import * as React from 'react';
-import Paper from '@material-ui/core/Paper';
-import { ViewState } from '@devexpress/dx-react-scheduler';
-import { Scheduler, MonthView, Appointments } from '@devexpress/dx-react-scheduler-material-ui';
-import Grid from '@material-ui/core/Grid';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
+import React, { useEffect, useState } from "react";
+import Paper from "@material-ui/core/Paper";
+import { ViewState } from "@devexpress/dx-react-scheduler";
+import {
+  Scheduler,
+  MonthView,
+  Toolbar,
+  DateNavigator,
+  Appointments,
+  TodayButton,
+} from "@devexpress/dx-react-scheduler-material-ui";
+import Grid from "@material-ui/core/Grid";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import moment from "moment";
+import http from "../common/axios/index";
+import { MovieSharp } from "@material-ui/icons";
+import { ListItem } from "material-ui";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,107 +26,44 @@ const useStyles = makeStyles((theme) => ({
   },
   calendar: {
     padding: theme.spacing(1),
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: theme.spacing(1),
-    height: '100%',
+    height: "100%",
   },
   buttonSize: {
-    width: '130px',
+    width: "130px",
   },
 }));
 
-const currentDate = '2018-07-17';
-const appointments = [
-  {
-    title: '책과 함께하는 일상, 북앤힐링',
-    startDate: new Date(2018, 6, 23, 9, 30),
-    endDate: new Date(2018, 6, 23, 11, 30),
-  },
-  {
-    title: '영어 산문 매일 읽기',
-    startDate: new Date(2018, 6, 24, 10, 0),
-    endDate: new Date(2018, 6, 24, 11, 0),
-  },
-  {
-    title: '하루 20분 운동 루틴',
-    startDate: new Date(2018, 6, 24, 12, 0),
-    endDate: new Date(2018, 6, 24, 13, 35),
-  },
-  {
-    title: '스페인어 2문장 암기하기',
-    startDate: new Date(2018, 6, 24, 14, 30),
-    endDate: new Date(2018, 6, 24, 15, 45),
-  },
-  {
-    title: '나만의 강점 발견',
-    startDate: new Date(2018, 6, 25, 9, 45),
-    endDate: new Date(2018, 6, 25, 11, 15),
-  },
-  {
-    title: '매일 10분 코딩하여 웹퍼블리셔되기',
-    startDate: new Date(2018, 6, 18, 12, 35),
-    startDate: new Date(2018, 6, 25, 12, 0),
-    endDate: new Date(2018, 6, 25, 14, 0),
-  },
-  {
-    title: '매일매일 버킷리스트 쓰기',
-    startDate: new Date(2018, 6, 25, 15, 15),
-    endDate: new Date(2018, 6, 25, 16, 30),
-  },
-  {
-    title: '100일 셀프케어',
-    startDate: new Date(2018, 6, 26, 11, 0),
-    endDate: new Date(2018, 6, 26, 13, 30),
-  },
-  {
-    title: '장르 불문 매일 책 3장 읽기',
-    startDate: new Date(2018, 6, 26, 14, 0),
-    endDate: new Date(2018, 6, 26, 15, 30),
-  },
-  {
-    title: '하루 7시간 공부하기',
-    startDate: new Date(2018, 6, 27, 10, 0),
-    endDate: new Date(2018, 6, 27, 11, 30),
-  },
-  {
-    title: '행복일기 100일동안 부탁해',
-    startDate: new Date(2018, 6, 27, 14, 30),
-    endDate: new Date(2018, 6, 27, 16, 0),
-  },
-  {
-    title: '책과 함께하는 일상, 북앤힐링',
-    startDate: new Date(2018, 6, 16, 9, 30),
-    endDate: new Date(2018, 6, 16, 15, 30),
-  },
-  {
-    title: '나만의 강점 발견',
-    startDate: new Date(2018, 6, 17, 15, 45),
-    endDate: new Date(2018, 6, 18, 12, 15),
-  },
-  {
-    title: '매일 10분 코딩하여 웹퍼블리셔되기',
-    startDate: new Date(2018, 6, 18, 12, 35),
-    endDate: new Date(2018, 6, 18, 14, 15),
-  },
-  {
-    title: '매일매일 버킷리스트 쓰기',
-    startDate: new Date(2018, 6, 19, 15, 15),
-    endDate: new Date(2018, 6, 20, 20, 30),
-  },
-  {
-    title: '100일 셀프케어',
-    startDate: new Date(2018, 6, 20, 20, 0),
-    endDate: new Date(2018, 6, 20, 13, 30),
-  },
-  {
-    title: '하루 20분 운동 루틴',
-    startDate: new Date(2018, 6, 20, 14, 10),
-    endDate: new Date(2018, 6, 20, 15, 30),
-  },
-];
+const Appointment = ({ children, style, ...restProps }) => (
+  <Appointments.Appointment
+    {...restProps}
+    style={{
+      ...style,
+      backgroundColor: "#fc9e4f",
+      borderRadius: "8px",
+    }}
+  >
+    {children}
+  </Appointments.Appointment>
+);
 
-export default function Calendar() {
+const currentDate = moment().format("YYYY-MM-DD");
+const regDate = window.localStorage.getItem("regtime");
+
+export default function Calendar(challengeData) {
   const classes = useStyles();
+  const datas = [];
+  if (challengeData.challengeData != null) {
+    challengeData.challengeData.forEach((element) => {
+      var date = element.regtime.substring(0, 10);
+      datas.push({
+        title: element.title,
+        startDate: date + " 09:00",
+        endDate: date + " 20:00",
+      });
+    });
+  }
 
   return (
     <div className={classes.root}>
@@ -123,10 +71,13 @@ export default function Calendar() {
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7}>
           <Paper className={classes.calendar}>
-            <Scheduler data={appointments}>
-              <ViewState currentDate={currentDate} />
+            <Scheduler data={datas}>
+              <ViewState defaultCurrentDate={currentDate} height={660} />
               <MonthView />
-              <Appointments />
+              <Toolbar />
+              <DateNavigator />
+              <TodayButton />
+              <Appointments appointmentComponent={Appointment} />
             </Scheduler>
           </Paper>
         </Grid>
@@ -150,28 +101,50 @@ export default function Calendar() {
                 align="center"
                 color="textPrimary"
                 gutterBottom
+                style={{
+                  fontFamily: 'KOTRA_BOLD-Bold'
+                }}
               >
-                Zaksim 365 Days
+                작심 365 Days
               </Typography>
-              <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                Merge 님 작심 N일차 입니다.
+              <Typography
+                variant="h5"
+                align="center"
+                color="textSecondary"
+                paragraph
+                style={{
+                  fontFamily: 'KOTRA_BOLD-Bold'
+                }}
+              >
+                {window.localStorage.getItem("nickname")}님 작심{" "}
+                {moment(currentDate).diff(moment(regDate), "days") + 2}
+                일차 입니다.
               </Typography>
-              <div className={classes.heroButtons}>
+              <br />
+              {/* <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
                   <Grid item>
-                    <Button className={classes.buttonSize} variant="contained" color="primary">
+                    <Button
+                      className={classes.buttonSize}
+                      variant="contained"
+                      color="primary"
+                    >
                       나의 뱃지
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button className={classes.buttonSize} variant="outlined" color="primary">
+                    <Button
+                      className={classes.buttonSize}
+                      variant="outlined"
+                      color="primary"
+                    >
                       나의 진심
                     </Button>
                   </Grid>
                 </Grid>
-              </div>
+              </div> */}
             </Container>
-          </div>{' '}
+          </div>{" "}
         </Grid>
       </Grid>
     </div>
