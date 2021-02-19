@@ -58,7 +58,27 @@ public class ChallengeController {
         
         List<Challenge> list = challengeService.challengelist();
         List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
-        if(newList != null) {
+        if(newList.size() > 0) {
+        	result.data = "success";
+            result.message = "챌린지 목록을 불러옵니다.";
+            result.object = newList;
+        }else {
+        	result.data = "fail";
+			result.message = "챌린지가 없습니다.";
+        }
+		
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+	
+	@GetMapping("/new")
+    @ApiOperation(value = "새 챌린지 목록")
+    public Object challengenewlist() throws Exception {
+        
+        final BasicResponse result = new BasicResponse();
+        
+        List<Challenge> list = challengeService.challengenewlist();
+        List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;
@@ -78,7 +98,7 @@ public class ChallengeController {
         
         List<Challenge> list = challengeService.challengelist();
         List<String> hlist = challengeService.hashtagList(list);
-        if(hlist != null) {
+        if(hlist.size() > 0) {
         	result.data = "success";
             result.message = "해시태그 목록을 불러옵니다.";
             result.object = hlist;
@@ -114,7 +134,7 @@ public class ChallengeController {
         List<Challenge> klist = challengeService.challengeKeyword(hlist, title);
         List<ChallengeInfo> newList = challengeService.setNowUser(klist,1);
         
-        if(newList != null) {
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;
@@ -137,7 +157,7 @@ public class ChallengeController {
         challenge.setIsLive(2);
         List<Challenge> list = challengeService.challengeoption(challenge);
         List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
-        if(newList != null) {
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;
@@ -159,7 +179,7 @@ public class ChallengeController {
         challenge.setIsLive(isLive);
         List<Challenge> list = challengeService.challengeoption(challenge);
         List<ChallengeInfo> newList = challengeService.setNowUser(list,1);
-        if(newList != null) {
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;
@@ -179,7 +199,7 @@ public class ChallengeController {
         
         List<Challenge> list = challengeService.challengeIng(userId);
         List<ChallengeInfo> newList = challengeService.setNowUser(list,userId);
-        if(newList != null) {
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;
@@ -199,7 +219,7 @@ public class ChallengeController {
         
         List<Challenge> list = challengeService.challengeDone(userId);
         List<ChallengeInfo> newList = challengeService.setNowUser(list,userId);
-        if(newList != null) {
+        if(newList.size() > 0) {
         	result.data = "success";
             result.message = "챌린지 목록을 불러옵니다.";
             result.object = newList;

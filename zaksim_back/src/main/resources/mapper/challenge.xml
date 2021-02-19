@@ -14,6 +14,17 @@
 		order by c.start_date desc
 	</select>
 	
+	<select id="challengenewlist" resultType="Challenge">
+		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
+				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,
+				c.category_id categoryId,c.max_user maxUser,c.now_user nowUser,c.start_date startDate,
+				c.end_date endDate,c.hashtag,c.img_path imgPath
+		from challenge c join user u
+		on c.manager_id = u.user_id
+		order by challenge_id desc
+		limit 8
+	</select>
+	
 	<select id="challengeUserList" parameterType="int" resultType="Challenge">
 		select c.challenge_id challengeId,c.title,c.mission,c.summary,c.manager_id managerId,
 				u.nickname managerNickname,c.is_public isPublic,c.is_live isLive,

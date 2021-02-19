@@ -11,6 +11,7 @@ import com.zaksim.model.Cmember;
 
 public interface ChallengeService {
 	public List<Challenge> challengelist();
+	public List<Challenge> challengenewlist();
 	public List<Challenge> challengelistreverse();
 	public List<String> hashtagList(List<Challenge> list) throws Exception;
 	public List<Challenge> challengeHashtag(List<Challenge> list, String hashtag) throws Exception;
